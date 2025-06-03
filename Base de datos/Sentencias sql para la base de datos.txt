@@ -1,0 +1,65 @@
+-- TABLA DE PROVEEDORES
+CREATE TABLE proveedores (
+    codigo SERIAL PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    direccion TEXT,
+    telefono VARCHAR(30),
+    localidad VARCHAR(50),
+    provincia VARCHAR(50),
+    fecha_ultima_compra DATE
+);
+
+-- TABLA DE FACTURAS
+CREATE TABLE facturas (
+    id SERIAL PRIMARY KEY,
+    codigo_proveedor INT NOT NULL REFERENCES proveedores(codigo) ON DELETE CASCADE,
+    fecha DATE NOT NULL,
+    numero VARCHAR(50) NOT NULL,
+    neto NUMERIC(12,2) NOT NULL,
+    tasa NUMERIC(5,2) NOT NULL,
+    sobretasa NUMERIC(5,2),
+    total NUMERIC(12,2) NOT NULL
+);
+
+-- TABLA DE BANCOS
+CREATE TABLE bancos (
+    numero SERIAL PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    comentario TEXT
+);
+
+-- TABLA DE CUENTAS BANCARIAS
+CREATE TABLE cuentas_bancarias (
+    codigo SERIAL PRIMARY KEY,
+    numero_banco INT NOT NULL REFERENCES bancos(numero) ON DELETE CASCADE,
+    alias VARCHAR(100)
+);
+
+-- TABLA DE CHEQUES
+CREATE TABLE cheques (
+    id SERIAL PRIMARY KEY,
+    entro BOOLEAN NOT NULL,
+    codigo_cuenta INT NOT NULL REFERENCES cuentas_bancarias(codigo) ON DELETE CASCADE,
+    numero_cheque VARCHAR(50) NOT NULL,
+    fecha DATE NOT NULL,
+    monto NUMERIC(12,2) NOT NULL,
+    codigo_factura INT NOT NULL REFERENCES facturas(id) ON DELETE RESTRICT
+);
+
+-- VISTA DE PROYECCIÓN DE CUENTAS
+CREATE VIEW vista_proyeccion_cuentas AS
+SELECT 
+    ch.id AS id_cheque,
+    ch.fecha,
+    ch.numero_cheque,
+    ch.monto,
+    ch.entro,
+    f.numero AS numero_factura,
+    p.nombre AS proveedor,
+    cb.codigo AS codigo_cuenta,
+    b.nombre AS banco
+FROM cheques ch
+JOIN cuentas_bancarias cb ON ch.codigo_cuenta = cb.codigo
+JOIN bancos b ON cb.numero_banco = b.numero
+JOIN facturas f ON ch.codigo_factura = f.id
+JOIN proveedores p ON f.codigo_proveedor = p.codigo;
