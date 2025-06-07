@@ -5,6 +5,23 @@
     <!-- Bootstrap CSS y JS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+      html, body {
+        height: 100%;
+        margin: 0;
+      }
+      body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+      .container {
+        flex: 1 0 auto;
+      }
+      footer {
+        flex-shrink: 0;
+      }
+    </style>
     @stack('scripts')
 </head>
 <body>

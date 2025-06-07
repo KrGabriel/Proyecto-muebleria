@@ -16,7 +16,7 @@
         </div>
 
         <footer class="text-center mt-5 mb-3">
-            <small>© 2025 Sistema de Augkegab</small>
+            <small>© 2025 Sistema de Augeka</small>
         </footer>
     </body>
 </html>
