@@ -12,6 +12,21 @@
 
     <a href="{{ route('proveedores.create') }}" class="btn btn-primary mb-3">Nuevo Proveedor</a>
 
+    @php
+        // Datos simulados por si estás trabajando sin base de datos
+        $proveedores = $proveedores ?? [
+            (object)[
+                'codigo' => 1,
+                'nombre' => 'Proveedor Ejemplo',
+                'direccion' => 'Calle Falsa 123',
+                'telefono' => '123456789',
+                'localidad' => 'Ciudad X',
+                'provincia' => 'Provincia Y',
+                'fecha_ultima_compra' => '2025-06-01',
+            ],
+        ];
+    @endphp
+
     <table class="table table-striped">
         <thead>
             <tr>
@@ -25,7 +40,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($proveedores as $proveedor)
+            @forelse ($proveedores as $proveedor)
                 <tr>
                     <td>{{ $proveedor->nombre }}</td>
                     <td>{{ $proveedor->direccion }}</td>
@@ -42,7 +57,11 @@
                         </form>
                     </td>
                 </tr>
-            @endforeach
+            @empty
+                <tr>
+                    <td colspan="7" class="text-center">No hay proveedores cargados.</td>
+                </tr>
+            @endforelse
         </tbody>
     </table>
 </div>

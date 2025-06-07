@@ -6,7 +6,7 @@
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#">Mi App</a>
+        <a class="navbar-brand" href="proveedores">Mi App</a>
     </nav>
 
     <div class="container mt-4">

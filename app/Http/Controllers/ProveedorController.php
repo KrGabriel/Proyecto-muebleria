@@ -14,7 +14,7 @@ class ProveedorController extends Controller
     public function index()
     {
         $proveedores = Proveedor::orderBy('nombre')->get();
-        return view('proveedores.index', compact('proveedores'));
+        return view('proveedores/index', compact('proveedores'));
     }
 
     /**
@@ -22,7 +22,7 @@ class ProveedorController extends Controller
      */
     public function create()
     {
-        return view('proveedores.create');
+        return view('proveedores/create');
     }
 
     /**
