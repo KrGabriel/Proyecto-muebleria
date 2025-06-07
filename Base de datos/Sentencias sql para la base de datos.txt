@@ -43,7 +43,7 @@ CREATE TABLE cheques (
     numero_cheque VARCHAR(50) NOT NULL,
     fecha DATE NOT NULL,
     debe NUMERIC(12,2) NOT NULL,
-    haber Numeric(12,2) NOT NULL,
+    haber NUMERIC(12,2) NOT NULL,
     codigo_factura INT NOT NULL REFERENCES facturas(id) ON DELETE RESTRICT
 );
 
