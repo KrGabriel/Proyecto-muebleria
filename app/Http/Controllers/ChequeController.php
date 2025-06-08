@@ -2,64 +2,58 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
+use App\Models\Cheque;
 use Illuminate\Http\Request;
 
 class ChequeController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        return response()->json(
+            Cheque::with(['cuenta', 'factura'])->get()
+        );
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'codigo_cuenta' => 'required|exists:cuenta_bancarias,id',
+            'codigo_factura' => 'nullable|exists:facturas,id',
+            'numero' => 'required|string|max:50|unique:cheques,numero',
+            'debe' => 'required|numeric|min:0',
+            'haber' => 'required|numeric|min:0',
+            'fecha_emision' => 'required|date',
+            'fecha_pago' => 'required|date|after_or_equal:fecha_emision',
+        ]);
+        $cheque = Cheque::create($validated);
+        return response()->json($cheque, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function show(Cheque $cheque)
     {
-        //
+        return response()->json(
+            $cheque->load(['cuenta', 'factura'])
+        );
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function update(Request $request, Cheque $cheque)
     {
-        //
+        $validated = $request->validate([
+            'codigo_cuenta' => 'required|exists:cuenta_bancarias,id',
+            'codigo_factura' => 'nullable|exists:facturas,id',
+            'numero' => 'required|string|max:50|unique:cheques,numero,' . $cheque->id,
+            'debe' => 'required|numeric|min:0',
+            'haber' => 'required|numeric|min:0',
+            'fecha_emision' => 'required|date',
+            'fecha_pago' => 'required|date|after_or_equal:fecha_emision',
+        ]);
+        $cheque->update($validated);
+        return response()->json($cheque);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function destroy(Cheque $cheque)
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        $cheque->delete();
+        return response()->json(null, 204);
     }
 }

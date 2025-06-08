@@ -2,64 +2,42 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
+use App\Models\banco;
 use Illuminate\Http\Request;
 
 class BancoController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        return response()->json(banco::all());
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'nombre' => 'required|string|max:255|unique:bancos,nombre',
+        ]);
+        $banco = banco::create($validated);
+        return response()->json($banco, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function show(banco $banco)
     {
-        //
+        return response()->json($banco);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function update(Request $request, banco $banco)
     {
-        //
+        $validated = $request->validate([
+            'nombre' => 'required|string|max:255|unique:bancos,nombre,' . $banco->id,
+        ]);
+        $banco->update($validated);
+        return response()->json($banco);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function destroy(banco $banco)
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        $banco->delete();
+        return response()->json(null, 204);
     }
 }

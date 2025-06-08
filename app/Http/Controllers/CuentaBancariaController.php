@@ -2,64 +2,52 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\CuentaBancaria;
+use App\Models\Banco;
 
 class CuentaBancariaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $cuentas = CuentaBancaria::with('banco')->get();
+        $bancos = Banco::all();
+        return view('cuentas.index', compact('cuentas', 'bancos'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function show($id)
     {
-        //
+        $cuenta = CuentaBancaria::findOrFail($id);
+        return response()->json($cuenta);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'codigo_banco' => 'required|exists:bancos,id',
+            'numero' => 'required|string|max:50|unique:cuenta_bancarias,numero',
+            'tipo' => 'required|string|max:50',
+        ]);
+        $cuenta = CuentaBancaria::create($validated);
+        return response()->json($cuenta);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function update(Request $request, $id)
     {
-        //
+        $cuenta = CuentaBancaria::findOrFail($id);
+        $validated = $request->validate([
+            'codigo_banco' => 'required|exists:bancos,id',
+            'numero' => 'required|string|max:50|unique:cuenta_bancarias,numero,' . $id,
+            'tipo' => 'required|string|max:50',
+        ]);
+        $cuenta->update($validated);
+        return response()->json($cuenta);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function destroy($id)
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        $cuenta = CuentaBancaria::findOrFail($id);
+        $cuenta->delete();
+        return response()->json(['success' => true]);
     }
 }

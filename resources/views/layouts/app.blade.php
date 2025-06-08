@@ -2,31 +2,14 @@
 <html>
 <head>
     <title>Sistema para marquez</title>
-    <!-- Bootstrap CSS y JS -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <style>
-      html, body {
-        height: 100%;
-        margin: 0;
-      }
-      body {
-        display: flex;
-        flex-direction: column;
-        min-height: 100vh;
-      }
-      .container {
-        flex: 1 0 auto;
-      }
-      footer {
-        flex-shrink: 0;
-      }
-    </style>
-    @stack('scripts')
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="proveedores">Mi App</a>
+        <a class="navbar-brand" href="{{ url('/') }}">Mi App</a>
     </nav>
 
     <div class="container mt-4">
@@ -34,7 +17,11 @@
     </div>
 
     <footer class="text-center mt-5 mb-3">
-        <small>© 2025 Sistema de Augkegab</small>
+        <small>© 2025 AUGEKA</small>
     </footer>
+
+    <!-- Bootstrap bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    @stack('scripts')
 </body>
 </html>
