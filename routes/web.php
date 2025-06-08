@@ -52,6 +52,19 @@ Route::get('/proyecciones/pdf', function () {
 
     return $pdf->download('proyecciones_filtradas.pdf');
 });
+
+Route::get('/banco', function () {
+    return view('bancos/index');
+});
+
+Route::get('/cuenta', function () {
+    return view('cuentas/index');
+});
+
+Route::get('/cheque', function () {
+    return view('cheques/index');
+});
+
 // Bancos
 Route::get('/bancos', [BancoController::class, 'index'])->name('bancos.index');
 Route::get('/bancos/{id}', [BancoController::class, 'show']);

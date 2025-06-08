@@ -69,7 +69,7 @@
         <a href="?banco=nación&desde={{ $desde }}&hasta={{ $hasta }}" class="btn btn-outline-primary {{ $bancoFiltro === 'nación' ? 'active' : '' }}">Nación</a>
         <a href="?banco=macro&desde={{ $desde }}&hasta={{ $hasta }}" class="btn btn-outline-success {{ $bancoFiltro === 'macro' ? 'active' : '' }}">Macro</a>
         <a href="?banco=santander&desde={{ $desde }}&hasta={{ $hasta }}" class="btn btn-outline-danger {{ $bancoFiltro === 'santander' ? 'active' : '' }}">Santander</a>
-        <a href="#" class="btn btn-success float-end">Agregar nuevo banco</a>
+        <a href="bancos" class="btn btn-success float-end">Agregar nuevo banco</a>
     </div>
 
     {{-- Tabla --}}
