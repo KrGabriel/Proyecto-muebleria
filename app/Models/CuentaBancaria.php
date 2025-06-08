@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class CuentaBancaria extends Model
 {
-    protected $table = 'cuentas_bancarias';
+    protected $table = 'cuentas';
     protected $primaryKey = 'codigo';
     public $timestamps = false;
 

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id(); 
             $table->boolean('entro');
             $table->foreignId('codigo_cuenta')
-                ->constrained('cuentas_bancarias', 'codigo')
+                ->constrained('cuentas', 'codigo')
                 ->onDelete('cascade');
             $table->string('numero_cheque', 50);
             $table->date('fecha');
