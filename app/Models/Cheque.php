@@ -2,17 +2,20 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Cheque extends Model
 {
+    use HasFactory;
+
     protected $table = 'cheques';
     protected $primaryKey = 'id';
     public $timestamps = false;
 
     public function cuenta()
     {
-        return $this-belongsTo(CuentaBancaria::class, 'codigo_cuenta');
+        return $this->belongsTo(CuentaBancaria::class, 'codigo_cuenta');
     }
 
     public function factura()
