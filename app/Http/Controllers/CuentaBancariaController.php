@@ -24,8 +24,7 @@ class CuentaBancariaController extends Controller
     {
         $validated = $request->validate([
             'numero_banco' => 'required|exists:bancos,numero',
-            'numero' => 'required|string|max:50|unique:cuentas,numero',
-            'alias' => 'nullable|string',
+            'alias' => 'required|string|max:255|unique:cuentas,alias' . (isset($cuenta) ? ',' . $cuenta->codigo . ',codigo' : ''),
         ]);
         CuentaBancaria::create($validated);
         return redirect()->route('cuentas.index')->with('success', 'Cuenta creada correctamente.');
@@ -41,8 +40,7 @@ class CuentaBancariaController extends Controller
     {
         $validated = $request->validate([
             'numero_banco' => 'required|exists:bancos,numero',
-            'numero' => 'required|string|max:50|unique:cuentas,numero,' . $cuenta->codigo . ',codigo',
-            'alias' => 'nullable|string',
+            'alias' => 'required|string|max:255|unique:cuentas,alias' . (isset($cuenta) ? ',' . $cuenta->codigo . ',codigo' : ''),
         ]);
         $cuenta->update($validated);
         return redirect()->route('cuentas.index')->with('success', 'Cuenta actualizada correctamente.');

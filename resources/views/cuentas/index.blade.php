@@ -18,16 +18,16 @@
                     <tr>
                         <th>Banco</th>
                         <th>Número</th>
-                        <th>Tipo</th>
+                        <th>Alias</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse ($cuentas as $cuenta)
                         <tr>
-                            <td>{{ $cuenta->banco->nombre }}</td>
+                            <td>{{ $cuenta->banco ? $cuenta->banco->nombre : '-' }}</td>
                             <td>{{ $cuenta->numero }}</td>
-                            <td>{{ $cuenta->tipo }}</td>
+                            <td>{{ $cuenta->alias }}</td>
                             <td>
                                 <a href="{{ route('cuentas.edit', $cuenta->codigo) }}" class="btn btn-warning btn-sm" title="Editar">
                                     <i class="bi bi-pencil-square"></i>

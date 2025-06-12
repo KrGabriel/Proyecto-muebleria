@@ -16,17 +16,16 @@ class CuentaBancaria extends Model
 
     protected $fillable = [
         'numero_banco',
-        'numero',
         'alias',
     ];
 
     public function banco()
     {
-        return $this->belongsTo(Banco::class, 'numero_banco');
+        return $this->belongsTo(Banco::class, 'numero_banco', 'numero');
     }
 
     public function cheques()
     {
-        return $this->hasMany(Cheque::class, 'codigo_cuenta');
+        return $this->hasMany(Cheque::class, 'codigo_cuenta', 'codigo');
     }
 }

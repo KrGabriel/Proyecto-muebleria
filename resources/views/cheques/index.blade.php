@@ -18,24 +18,22 @@
                     <tr>
                         <th>Cuenta</th>
                         <th>Factura</th>
-                        <th>Número</th>
+                        <th>Número Cheque</th>
                         <th>Debe</th>
                         <th>Haber</th>
-                        <th>Fecha Emisión</th>
-                        <th>Fecha Pago</th>
+                        <th>Fecha</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse ($cheques as $cheque)
                         <tr>
-                            <td>{{ $cheque->cuenta->numero }}</td>
-                            <td>{{ $cheque->factura ? $cheque->factura->numero : '-' }}</td>
-                            <td>{{ $cheque->numero }}</td>
+                            <td>{{ $cheque->cuenta ? $cheque->cuenta->numero : '-' }}</td>
+                            <td>{{ $cheque->factura ? $cheque->factura->id : '-' }}</td>
+                            <td>{{ $cheque->numero_cheque }}</td>
                             <td>{{ $cheque->debe }}</td>
                             <td>{{ $cheque->haber }}</td>
-                            <td>{{ $cheque->fecha_emision }}</td>
-                            <td>{{ $cheque->fecha_pago }}</td>
+                            <td>{{ $cheque->fecha }}</td>
                             <td>
                                 <a href="{{ route('cheques.edit', $cheque->id) }}" class="btn btn-warning btn-sm" title="Editar">
                                     <i class="bi bi-pencil-square"></i>
@@ -51,7 +49,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="8" class="text-center">No hay cheques cargados.</td>
+                            <td colspan="7" class="text-center">No hay cheques cargados.</td>
                         </tr>
                     @endforelse
                 </tbody>

@@ -1,57 +1,72 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <h2>Editar Cheque</h2>
-    <form action="{{ route('cheques.update', $cheque->id) }}" method="POST">
-        @csrf
-        @method('PUT')
-        <div class="mb-3">
-            <label class="form-label">Cuenta Bancaria:</label>
-            <select name="codigo_cuenta" class="form-select">
-                @foreach($cuentas as $cuenta)
-                    <option value="{{ $cuenta->id }}" @if($cheque->codigo_cuenta == $cuenta->id) selected @endif>{{ $cuenta->numero }}</option>
-                @endforeach
-            </select>
-            @error('codigo_cuenta') <div class="text-danger">{{ $message }}</div> @enderror
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header bg-success text-white">
+                <h4 class="mb-0"><i class="bi bi-plus-circle"></i> Nuevo Cheque</h4>
+            </div>
+            <div class="card-body">
+                <form action="{{ route('cheques.store') }}" method="POST">
+                    @csrf
+                    <div class="mb-3">
+                        <label class="form-label">Cuenta Bancaria:</label>
+                        <select name="codigo_cuenta" class="form-select" required>
+                            @foreach($cuentas as $cuenta)
+                                <option value="{{ $cuenta->codigo }}">{{ $cuenta->numero }}</option>
+                            @endforeach
+                        </select>
+                        @error('codigo_cuenta') <div class="text-danger">{{ $message }}</div> @enderror
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Factura:</label>
+                        <select name="codigo_factura" class="form-select">
+                            <option value="">Sin factura</option>
+                            @foreach($facturas as $factura)
+                                <option value="{{ $factura->id }}">{{ $factura->id }}</option>
+                            @endforeach
+                        </select>
+                        @error('codigo_factura') <div class="text-danger">{{ $message }}</div> @enderror
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Número Cheque:</label>
+                        <input type="text" name="numero_cheque" class="form-control" value="{{ old('numero_cheque') }}" required>
+                        @error('numero_cheque') <div class="text-danger">{{ $message }}</div> @enderror
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Debe:</label>
+                            <input type="number" name="debe" class="form-control" value="{{ old('debe') }}" min="0" step="0.01" required>
+                            @error('debe') <div class="text-danger">{{ $message }}</div> @enderror
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Haber:</label>
+                            <input type="number" name="haber" class="form-control" value="{{ old('haber') }}" min="0" step="0.01" required>
+                            @error('haber') <div class="text-danger">{{ $message }}</div> @enderror
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Fecha:</label>
+                        <input type="date" name="fecha" class="form-control" value="{{ old('fecha') }}" required>
+                        @error('fecha') <div class="text-danger">{{ $message }}</div> @enderror
+                    </div>
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" name="entro" class="form-check-input" value="1" {{ old('entro') ? 'checked' : '' }}>
+                        <label class="form-check-label">¿Entró?</label>
+                        @error('entro') <div class="text-danger">{{ $message }}</div> @enderror
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <button type="submit" class="btn btn-success btn-lg">
+                            <i class="bi bi-save"></i> Guardar
+                        </button>
+                        <a href="{{ route('cheques.index') }}" class="btn btn-secondary btn-lg">
+                            <i class="bi bi-arrow-left"></i> Volver
+                        </a>
+                    </div>
+                </form>
+            </div>
         </div>
-        <div class="mb-3">
-            <label class="form-label">Factura:</label>
-            <select name="codigo_factura" class="form-select">
-                <option value="">Sin factura</option>
-                @foreach($facturas as $factura)
-                    <option value="{{ $factura->id }}" @if($cheque->codigo_factura == $factura->id) selected @endif>{{ $factura->numero }}</option>
-                @endforeach
-            </select>
-            @error('codigo_factura') <div class="text-danger">{{ $message }}</div> @enderror
-        </div>
-        <div class="mb-3">
-            <label class="form-label">Número:</label>
-            <input type="text" name="numero" class="form-control" value="{{ old('numero', $cheque->numero) }}">
-            @error('numero') <div class="text-danger">{{ $message }}</div> @enderror
-        </div>
-        <div class="mb-3">
-            <label class="form-label">Debe:</label>
-            <input type="number" name="debe" class="form-control" value="{{ old('debe', $cheque->debe) }}">
-            @error('debe') <div class="text-danger">{{ $message }}</div> @enderror
-        </div>
-        <div class="mb-3">
-            <label class="form-label">Haber:</label>
-            <input type="number" name="haber" class="form-control" value="{{ old('haber', $cheque->haber) }}">
-            @error('haber') <div class="text-danger">{{ $message }}</div> @enderror
-        </div>
-        <div class="mb-3">
-            <label class="form-label">Fecha Emisión:</label>
-            <input type="date" name="fecha_emision" class="form-control" value="{{ old('fecha_emision', $cheque->fecha_emision) }}">
-            @error('fecha_emision') <div class="text-danger">{{ $message }}</div> @enderror
-        </div>
-        <div class="mb-3">
-            <label class="form-label">Fecha Pago:</label>
-            <input type="date" name="fecha_pago" class="form-control" value="{{ old('fecha_pago', $cheque->fecha_pago) }}">
-            @error('fecha_pago') <div class="text-danger">{{ $message }}</div> @enderror
-        </div>
-        <button type="submit" class="btn btn-success">Actualizar</button>
-        <a href="{{ route('cheques.index') }}" class="btn btn-secondary">Volver</a>
-    </form>
+    </div>
 </div>
 @endsection

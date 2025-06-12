@@ -15,7 +15,7 @@
                         <label class="form-label">Cuenta Bancaria:</label>
                         <select name="codigo_cuenta" class="form-select" required>
                             @foreach($cuentas as $cuenta)
-                                <option value="{{ $cuenta->id }}" @if($cheque->codigo_cuenta == $cuenta->id) selected @endif>{{ $cuenta->numero }}</option>
+                                <option value="{{ $cuenta->codigo }}" @if($cheque->codigo_cuenta == $cuenta->codigo) selected @endif>{{ $cuenta->numero }}</option>
                             @endforeach
                         </select>
                         @error('codigo_cuenta') <div class="text-danger">{{ $message }}</div> @enderror
@@ -25,15 +25,15 @@
                         <select name="codigo_factura" class="form-select">
                             <option value="">Sin factura</option>
                             @foreach($facturas as $factura)
-                                <option value="{{ $factura->id }}" @if($cheque->codigo_factura == $factura->id) selected @endif>{{ $factura->numero }}</option>
+                                <option value="{{ $factura->id }}" @if($cheque->codigo_factura == $factura->id) selected @endif>{{ $factura->id }}</option>
                             @endforeach
                         </select>
                         @error('codigo_factura') <div class="text-danger">{{ $message }}</div> @enderror
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Número:</label>
-                        <input type="text" name="numero" class="form-control" value="{{ old('numero', $cheque->numero) }}" placeholder="Ej: 00012345" required>
-                        @error('numero') <div class="text-danger">{{ $message }}</div> @enderror
+                        <label class="form-label">Número Cheque:</label>
+                        <input type="text" name="numero_cheque" class="form-control" value="{{ old('numero_cheque', $cheque->numero_cheque) }}" required>
+                        @error('numero_cheque') <div class="text-danger">{{ $message }}</div> @enderror
                     </div>
                     <div class="row">
                         <div class="col-md-6 mb-3">
@@ -47,17 +47,15 @@
                             @error('haber') <div class="text-danger">{{ $message }}</div> @enderror
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Fecha Emisión:</label>
-                            <input type="date" name="fecha_emision" class="form-control" value="{{ old('fecha_emision', $cheque->fecha_emision) }}" required>
-                            @error('fecha_emision') <div class="text-danger">{{ $message }}</div> @enderror
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Fecha Pago:</label>
-                            <input type="date" name="fecha_pago" class="form-control" value="{{ old('fecha_pago', $cheque->fecha_pago) }}" required>
-                            @error('fecha_pago') <div class="text-danger">{{ $message }}</div> @enderror
-                        </div>
+                    <div class="mb-3">
+                        <label class="form-label">Fecha:</label>
+                        <input type="date" name="fecha" class="form-control" value="{{ old('fecha', $cheque->fecha) }}" required>
+                        @error('fecha') <div class="text-danger">{{ $message }}</div> @enderror
+                    </div>
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" name="entro" class="form-check-input" value="1" {{ old('entro', $cheque->entro) ? 'checked' : '' }}>
+                        <label class="form-check-label">¿Entró?</label>
+                        @error('entro') <div class="text-danger">{{ $message }}</div> @enderror
                     </div>
                     <div class="d-flex justify-content-between">
                         <button type="submit" class="btn btn-success btn-lg">
