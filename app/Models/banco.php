@@ -11,7 +11,13 @@ class Banco extends Model
 
     protected $table = 'bancos';
     protected $primaryKey = 'numero';
+    public $incrementing = true;
     public $timestamps = false;
+
+    protected $fillable = [
+        'nombre',
+        'comentario',
+    ];
 
     public function cuentas()
     {

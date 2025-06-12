@@ -11,7 +11,18 @@ class Cheque extends Model
 
     protected $table = 'cheques';
     protected $primaryKey = 'id';
+    public $incrementing = true;
     public $timestamps = false;
+
+    protected $fillable = [
+        'entro',
+        'codigo_cuenta',
+        'numero_cheque',
+        'fecha',
+        'debe',
+        'haber',
+        'codigo_factura',
+    ];
 
     public function cuenta()
     {

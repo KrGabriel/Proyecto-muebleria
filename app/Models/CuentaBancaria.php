@@ -11,7 +11,13 @@ class CuentaBancaria extends Model
 
     protected $table = 'cuentas';
     protected $primaryKey = 'codigo';
+    public $incrementing = true;
     public $timestamps = false;
+
+    protected $fillable = [
+        'numero_banco',
+        'alias',
+    ];
 
     public function banco()
     {
