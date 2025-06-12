@@ -8,7 +8,7 @@
                 <h4 class="mb-0"><i class="bi bi-pencil-square"></i> Editar Banco</h4>
             </div>
             <div class="card-body">
-                <form action="{{ route('bancos.update', $banco->id) }}" method="POST">
+                <form action="{{ route('bancos.update', $banco->numero) }}" method="POST">
                     @csrf
                     @method('PUT')
                     <div class="mb-3">

@@ -29,10 +29,10 @@
                             <td>{{ $cuenta->numero }}</td>
                             <td>{{ $cuenta->tipo }}</td>
                             <td>
-                                <a href="{{ route('cuentas.edit', $cuenta->id) }}" class="btn btn-warning btn-sm" title="Editar">
+                                <a href="{{ route('cuentas.edit', $cuenta->codigo) }}" class="btn btn-warning btn-sm" title="Editar">
                                     <i class="bi bi-pencil-square"></i>
                                 </a>
-                                <form action="{{ route('cuentas.destroy', $cuenta->id) }}" method="POST" style="display:inline;">
+                                <form action="{{ route('cuentas.destroy', $cuenta->codigo) }}" method="POST" style="display:inline;">
                                     @csrf
                                     @method('DELETE')
                                     <button class="btn btn-danger btn-sm" onclick="return confirm('¿Eliminar esta cuenta?')" title="Eliminar">

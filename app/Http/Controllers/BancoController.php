@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\banco;
+use App\Models\Banco;
 use Illuminate\Http\Request;
 
 class BancoController extends Controller
 {
     public function index()
     {
-        $bancos = banco::all();
+        $bancos = Banco::all();
         return view('bancos.index', compact('bancos'));
     }
 
@@ -22,26 +22,28 @@ class BancoController extends Controller
     {
         $validated = $request->validate([
             'nombre' => 'required|string|max:255|unique:bancos,nombre',
+            'comentario' => 'nullable|string',
         ]);
-        banco::create($validated);
+        Banco::create($validated);
         return redirect()->route('bancos.index')->with('success', 'Banco creado correctamente.');
     }
 
-    public function edit(banco $banco)
+    public function edit(Banco $banco)
     {
         return view('bancos.edit', compact('banco'));
     }
 
-    public function update(Request $request, banco $banco)
+    public function update(Request $request, Banco $banco)
     {
         $validated = $request->validate([
-            'nombre' => 'required|string|max:255|unique:bancos,nombre,' . $banco->id,
+            'nombre' => 'required|string|max:255|unique:bancos,nombre,' . $banco->numero . ',numero',
+            'comentario' => 'nullable|string',
         ]);
         $banco->update($validated);
         return redirect()->route('bancos.index')->with('success', 'Banco actualizado correctamente.');
     }
 
-    public function destroy(banco $banco)
+    public function destroy(Banco $banco)
     {
         $banco->delete();
         return redirect()->route('bancos.index')->with('success', 'Banco eliminado correctamente.');

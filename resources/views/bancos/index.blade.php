@@ -25,10 +25,10 @@
                         <tr>
                             <td>{{ $banco->nombre }}</td>
                             <td>
-                                <a href="{{ route('bancos.edit', $banco->id) }}" class="btn btn-warning btn-sm" title="Editar">
+                                <a href="{{ route('bancos.edit', $banco->numero) }}" class="btn btn-warning btn-sm" title="Editar">
                                     <i class="bi bi-pencil-square"></i>
                                 </a>
-                                <form action="{{ route('bancos.destroy', $banco->id) }}" method="POST" style="display:inline;">
+                                <form action="{{ route('bancos.destroy', $banco->numero) }}" method="POST" style="display:inline;">
                                     @csrf
                                     @method('DELETE')
                                     <button class="btn btn-danger btn-sm" onclick="return confirm('¿Eliminar este banco?')" title="Eliminar">

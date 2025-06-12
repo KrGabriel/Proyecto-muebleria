@@ -12,7 +12,7 @@ class Banco extends Model
     protected $table = 'bancos';
     protected $primaryKey = 'numero';
     public $incrementing = true;
-    public $timestamps = false;
+    public $timestamps = true;
 
     protected $fillable = [
         'nombre',
@@ -21,6 +21,6 @@ class Banco extends Model
 
     public function cuentas()
     {
-        return $this->hasMany(CuentaBancaria::class, 'numero_banco');
+        return $this->hasMany(CuentaBancaria::class, 'numero_banco', 'numero');
     }
 }
