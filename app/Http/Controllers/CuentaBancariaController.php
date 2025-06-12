@@ -11,14 +11,13 @@ class CuentaBancariaController extends Controller
     public function index()
     {
         $cuentas = CuentaBancaria::with('banco')->get();
-        $bancos = Banco::all();
-        return view('cuentas.index', compact('cuentas', 'bancos'));
+        return view('cuentas.index', compact('cuentas'));
     }
 
-    public function show($id)
+    public function create()
     {
-        $cuenta = CuentaBancaria::findOrFail($id);
-        return response()->json($cuenta);
+        $bancos = Banco::all();
+        return view('cuentas.create', compact('bancos'));
     }
 
     public function store(Request $request)
@@ -28,26 +27,30 @@ class CuentaBancariaController extends Controller
             'numero' => 'required|string|max:50|unique:cuenta_bancarias,numero',
             'tipo' => 'required|string|max:50',
         ]);
-        $cuenta = CuentaBancaria::create($validated);
-        return response()->json($cuenta);
+        CuentaBancaria::create($validated);
+        return redirect()->route('cuentas.index')->with('success', 'Cuenta creada correctamente.');
     }
 
-    public function update(Request $request, $id)
+    public function edit(CuentaBancaria $cuenta)
     {
-        $cuenta = CuentaBancaria::findOrFail($id);
+        $bancos = Banco::all();
+        return view('cuentas.edit', compact('cuenta', 'bancos'));
+    }
+
+    public function update(Request $request, CuentaBancaria $cuenta)
+    {
         $validated = $request->validate([
             'codigo_banco' => 'required|exists:bancos,id',
-            'numero' => 'required|string|max:50|unique:cuenta_bancarias,numero,' . $id,
+            'numero' => 'required|string|max:50|unique:cuenta_bancarias,numero,' . $cuenta->id,
             'tipo' => 'required|string|max:50',
         ]);
         $cuenta->update($validated);
-        return response()->json($cuenta);
+        return redirect()->route('cuentas.index')->with('success', 'Cuenta actualizada correctamente.');
     }
 
-    public function destroy($id)
+    public function destroy(CuentaBancaria $cuenta)
     {
-        $cuenta = CuentaBancaria::findOrFail($id);
         $cuenta->delete();
-        return response()->json(['success' => true]);
+        return redirect()->route('cuentas.index')->with('success', 'Cuenta eliminada correctamente.');
     }
 }

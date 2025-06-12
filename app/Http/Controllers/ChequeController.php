@@ -3,15 +3,23 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cheque;
+use App\Models\CuentaBancaria;
+use App\Models\Factura;
 use Illuminate\Http\Request;
 
 class ChequeController extends Controller
 {
     public function index()
     {
-        return response()->json(
-            Cheque::with(['cuenta', 'factura'])->get()
-        );
+        $cheques = Cheque::with(['cuenta', 'factura'])->get();
+        return view('cheques.index', compact('cheques'));
+    }
+
+    public function create()
+    {
+        $cuentas = CuentaBancaria::all();
+        $facturas = Factura::all();
+        return view('cheques.create', compact('cuentas', 'facturas'));
     }
 
     public function store(Request $request)
@@ -25,15 +33,15 @@ class ChequeController extends Controller
             'fecha_emision' => 'required|date',
             'fecha_pago' => 'required|date|after_or_equal:fecha_emision',
         ]);
-        $cheque = Cheque::create($validated);
-        return response()->json($cheque, 201);
+        Cheque::create($validated);
+        return redirect()->route('cheques.index')->with('success', 'Cheque creado correctamente.');
     }
 
-    public function show(Cheque $cheque)
+    public function edit(Cheque $cheque)
     {
-        return response()->json(
-            $cheque->load(['cuenta', 'factura'])
-        );
+        $cuentas = CuentaBancaria::all();
+        $facturas = Factura::all();
+        return view('cheques.edit', compact('cheque', 'cuentas', 'facturas'));
     }
 
     public function update(Request $request, Cheque $cheque)
@@ -48,12 +56,12 @@ class ChequeController extends Controller
             'fecha_pago' => 'required|date|after_or_equal:fecha_emision',
         ]);
         $cheque->update($validated);
-        return response()->json($cheque);
+        return redirect()->route('cheques.index')->with('success', 'Cheque actualizado correctamente.');
     }
 
     public function destroy(Cheque $cheque)
     {
         $cheque->delete();
-        return response()->json(null, 204);
+        return redirect()->route('cheques.index')->with('success', 'Cheque eliminado correctamente.');
     }
 }

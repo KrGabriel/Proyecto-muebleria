@@ -20,23 +20,6 @@ Route::get('/proveedores', function () {
 
 Route::get('/proyecciones/pdf', [ProyeccionesController::class, 'exportarPDF']);
 
-// Bancos
-Route::get('/bancos', [BancoController::class, 'index'])->name('bancos.index');
-Route::get('/bancos/{id}', [BancoController::class, 'show']);
-Route::post('/bancos', [BancoController::class, 'store']);
-Route::post('/bancos/{id}', [BancoController::class, 'update']);
-Route::delete('/bancos/{id}', [BancoController::class, 'destroy']);
-
-// Cuentas
-Route::get('/cuentas', [CuentaBancariaController::class, 'index'])->name('cuentas.index');
-Route::get('/cuentas/{id}', [CuentaBancariaController::class, 'show']);
-Route::post('/cuentas', [CuentaBancariaController::class, 'store']);
-Route::post('/cuentas/{id}', [CuentaBancariaController::class, 'update']);
-Route::delete('/cuentas/{id}', [CuentaBancariaController::class, 'destroy']);
-
-// Cheques
-Route::get('/cheques', [ChequeController::class, 'index'])->name('cheques.index');
-Route::get('/cheques/{id}', [ChequeController::class, 'show']);
-Route::post('/cheques', [ChequeController::class, 'store']);
-Route::post('/cheques/{id}', [ChequeController::class, 'update']);
-Route::delete('/cheques/{id}', [ChequeController::class, 'destroy']);
+Route::resource('bancos', BancoController::class);
+Route::resource('cuentas', CuentaBancariaController::class);
+Route::resource('cheques', ChequeController::class);

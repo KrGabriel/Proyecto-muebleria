@@ -9,7 +9,13 @@ class BancoController extends Controller
 {
     public function index()
     {
-        return response()->json(banco::all());
+        $bancos = banco::all();
+        return view('bancos.index', compact('bancos'));
+    }
+
+    public function create()
+    {
+        return view('bancos.create');
     }
 
     public function store(Request $request)
@@ -17,13 +23,13 @@ class BancoController extends Controller
         $validated = $request->validate([
             'nombre' => 'required|string|max:255|unique:bancos,nombre',
         ]);
-        $banco = banco::create($validated);
-        return response()->json($banco, 201);
+        banco::create($validated);
+        return redirect()->route('bancos.index')->with('success', 'Banco creado correctamente.');
     }
 
-    public function show(banco $banco)
+    public function edit(banco $banco)
     {
-        return response()->json($banco);
+        return view('bancos.edit', compact('banco'));
     }
 
     public function update(Request $request, banco $banco)
@@ -32,12 +38,12 @@ class BancoController extends Controller
             'nombre' => 'required|string|max:255|unique:bancos,nombre,' . $banco->id,
         ]);
         $banco->update($validated);
-        return response()->json($banco);
+        return redirect()->route('bancos.index')->with('success', 'Banco actualizado correctamente.');
     }
 
     public function destroy(banco $banco)
     {
         $banco->delete();
-        return response()->json(null, 204);
+        return redirect()->route('bancos.index')->with('success', 'Banco eliminado correctamente.');
     }
 }
