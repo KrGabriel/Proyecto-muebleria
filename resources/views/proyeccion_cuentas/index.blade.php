@@ -8,7 +8,6 @@
 
     @php
         use Carbon\Carbon;
-
         $bancoFiltro = request('banco');
         $desde = request('desde');
         $hasta = request('hasta');
@@ -16,41 +15,76 @@
         $totalPaginas = $proyecciones->lastPage();
     @endphp
 
-    <form method="GET" class="row g-3 mb-4 align-items-end">
-        <div class="col-md-3">
-            <label for="desde" class="form-label">Desde</label>
-            <input type="date" name="desde" value="{{ request('desde') }}" class="form-control">
-        </div>
-        <div class="col-md-3">
-            <label for="hasta" class="form-label">Hasta</label>
-            <input type="date" name="hasta" value="{{ request('hasta') }}" class="form-control">
-        </div>
-        <div class="col-md-3">
-            <button type="submit" class="btn btn-outline-secondary w-100">Filtrar</button>
-        </div>
-    </form>
+    <div class="d-flex flex-wrap align-items-center gap-3 mb-4">
+        <form method="GET">
+            <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#filtroModal">
+                Filtrar
+            </button>
+        </form>
 
-    <div class="mb-4">
-        <div class="btn-group" role="group">
-            @php
-                $params = request()->except('page', 'banco');
-            @endphp
-
-            <a href="{{ url()->current() }}?{{ http_build_query($params) }}" 
-            class="btn btn-outline-secondary {{ !$bancoFiltro ? 'active' : '' }}">
-                Todos
-            </a>
-
-            @foreach ($bancos as $banco)
-                <a href="{{ url()->current() }}?{{ http_build_query(array_merge($params, ['banco' => $banco->nombre])) }}" 
-                class="btn btn-outline-primary {{ $bancoFiltro === $banco->nombre ? 'active' : '' }}">
-                    {{ ucfirst($banco->nombre) }}
-                </a>
-            @endforeach
-        </div>
-        <a href="bancos" class="btn btn-success mx-2">+ Agregar nuevo banco</a>
+        @if(request()->hasAny(['desde', 'hasta', 'banco', 'solo_si']))
+            <div class="p-2 border rounded bg-light small d-flex flex-wrap align-items-center gap-2">
+                <strong class="me-2">Parámetros:</strong>
+                @if(request('desde'))
+                    <span>Desde: {{ request('desde') }}</span>
+                @endif
+                @if(request('hasta'))
+                    <span>Hasta: {{ request('hasta') }}</span>
+                @endif
+                @if(request('banco'))
+                    <span>Banco: {{ ucfirst(request('banco')) }}</span>
+                @endif
+                @if(request()->filled('solo_si'))
+                    <span>Solo si: {{ request('solo_si') == '1' ? 'Sí' : 'No' }}</span>
+                @endif
+            </div>
+        @endif
     </div>
 
+    <div class="modal fade" id="filtroModal" tabindex="-1" aria-labelledby="filtroModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form method="GET" class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="filtroModalLabel">Filtrar Proyecciones</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="desde" class="form-label">Desde</label>
+                    <input type="date" name="desde" value="{{ request('desde') }}" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label for="hasta" class="form-label">Hasta</label>
+                    <input type="date" name="hasta" value="{{ request('hasta') }}" class="form-control">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Banco</label>
+                    <select name="banco" class="form-select">
+                        <option value="">Todos</option>
+                        @foreach ($bancos as $banco)
+                            <option value="{{ $banco->nombre }}" {{ request('banco') === $banco->nombre ? 'selected' : '' }}>
+                                {{ ucfirst($banco->nombre) }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">¿Solo si?</label>
+                    <select name="solo_si" class="form-select">
+                        <option value="0">Todos</option>
+                        <option value="1" {{ request('solo_si') === '1' ? 'selected' : '' }}>Solo sí</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Filtrar</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            </div>
+            </form>
+        </div>
+    </div>
 
     {{-- Tabla --}}
     <div class="table-responsive">
@@ -96,7 +130,7 @@
     </nav>
 
 
-    <form action="{{ url('/proyecciones/pdf') }}" method="GET" target="_blank" class="mt-3">
+    <form action="{{ url('/proyecciones/exportar-pdf') }}" method="GET" target="_blank" class="mt-3">
         <input type="hidden" name="banco" value="{{ $bancoFiltro }}">
         <input type="hidden" name="desde" value="{{ $desde }}">
         <input type="hidden" name="hasta" value="{{ $hasta }}">

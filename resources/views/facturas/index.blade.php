@@ -62,4 +62,21 @@
         </div>
     </div>
 </div>
+
+@php
+    $currentPage = $facturas->currentPage();
+    $lastPage = $facturas->lastPage();
+@endphp
+
+<nav>
+    <ul class="pagination justify-content-center mt-4">
+        @for ($i = 1; $i <= $lastPage; $i++)
+            <li class="page-item {{ $i == $currentPage ? 'active' : '' }}">
+                <a class="page-link" href="{{ $facturas->url($i) }}">
+                    {{ $i }}
+                </a>
+            </li>
+        @endfor
+    </ul>
+</nav>
 @endsection

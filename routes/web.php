@@ -57,5 +57,5 @@
 
         // Proyecciones (ajusta según tus métodos)
         Route::get('proyecciones', [ProyeccionesController::class, 'index'])->name('proyecciones.index');
-        Route::post('proyecciones/exportar-pdf', [ProyeccionesController::class, 'exportarPDF'])->name('proyecciones.exportarPDF');
+        Route::get('proyecciones/exportar-pdf', [ProyeccionesController::class, 'exportarPDF'])->name('proyecciones.exportarPDF');
 });

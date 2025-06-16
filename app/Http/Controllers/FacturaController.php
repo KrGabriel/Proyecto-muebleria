@@ -13,7 +13,7 @@ class FacturaController extends Controller
      */
     public function index()
     {
-        $facturas = Factura::orderBy('codigo_proveedor')->get();
+        $facturas = Factura::orderBy('codigo_proveedor')->orderBy('fecha', 'desc')->paginate(5);
         return view('facturas.index', compact('facturas'));
     }
 

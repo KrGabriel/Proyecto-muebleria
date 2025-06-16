@@ -57,4 +57,20 @@
         </div>
     </div>
 </div>
+@php
+    $currentPage = $cheques->currentPage();
+    $lastPage = $cheques->lastPage();
+@endphp
+
+<nav>
+    <ul class="pagination justify-content-center mt-4">
+        @for ($i = 1; $i <= $lastPage; $i++)
+            <li class="page-item {{ $i == $currentPage ? 'active' : '' }}">
+                <a class="page-link" href="{{ $cheques->url($i) }}">
+                    {{ $i }}
+                </a>
+            </li>
+        @endfor
+    </ul>
+</nav>
 @endsection

@@ -13,7 +13,7 @@ class ProveedorController extends Controller
      */
     public function index()
     {
-        $proveedores = Proveedor::orderBy('nombre')->get();
+        $proveedores = Proveedor::orderBy('nombre')->paginate(5); // o la cantidad que prefieras
         return view('proveedores.index', compact('proveedores'));
     }
 
@@ -96,4 +96,7 @@ class ProveedorController extends Controller
 
         return redirect()->route('proveedores.index')->with('success', 'Proveedor eliminado');
     }
+
+
+
 }
