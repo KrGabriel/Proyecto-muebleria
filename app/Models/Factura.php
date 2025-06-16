@@ -26,7 +26,7 @@ class Factura extends Model
 
     public function proveedor()
     {
-        return $this->belongsTo(Proveedor::class, 'codigo_proveedor');
+        return $this->belongsTo(Proveedor::class, 'codigo_proveedor', 'codigo');
     }
 
     public function cheque()

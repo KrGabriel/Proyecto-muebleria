@@ -14,7 +14,7 @@ class ProveedorController extends Controller
     public function index()
     {
         $proveedores = Proveedor::orderBy('nombre')->get();
-        return view('proveedores/index', compact('proveedores'));
+        return view('proveedores.index', compact('proveedores'));
     }
 
     /**
@@ -22,16 +22,15 @@ class ProveedorController extends Controller
      */
     public function create()
     {
-        return view('proveedores/create');
+        return view('proveedores.create');
     }
 
     /**
-     * Guarda en la base de datos el usuario recien creado
+     * Guarda en la base de datos el proveedor recién creado
      */
     public function store(Request $request)
     {
         //Valida los datos que se ingresan
-
         $validated = $request->validate([
             'nombre' => 'required|string|max:100',
             'direccion' => 'nullable|string',
@@ -45,8 +44,8 @@ class ProveedorController extends Controller
         Proveedor::create($validated);
 
         //Redirige con un mensaje de exito
-        return redirect()<>route('proveedores.index')
-            ->with ('success', 'Proveedor creado de manera correcta');
+        return redirect()->route('proveedores.index')
+            ->with('success', 'Proveedor creado de manera correcta');
     }
 
     /**
@@ -54,7 +53,7 @@ class ProveedorController extends Controller
      */
     public function show(string $id)
     {
-       $proveedor = Proveedor::findOrFail($id);
+        $proveedor = Proveedor::findOrFail($id);
         return view('proveedores.show', compact('proveedor'));
     }
 
@@ -64,11 +63,11 @@ class ProveedorController extends Controller
     public function edit(string $id)
     {
         $proveedor = Proveedor::findOrFail($id);
-        return view('proveedores.edit', compact ('proveedor'));
+        return view('proveedores.edit', compact('proveedor'));
     }
 
     /**
-     * Actualiza el proveedor que se edito en el formulario anterior
+     * Actualiza el proveedor que se editó en el formulario anterior
      */
     public function update(Request $request, string $id)
     {

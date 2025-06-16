@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Facturas;
+use App\Models\Factura;
 
 class FacturaController extends Controller
 {
@@ -14,19 +14,20 @@ class FacturaController extends Controller
     public function index()
     {
         $facturas = Factura::orderBy('codigo_proveedor')->get();
-        return view('facturas.index', compact ('facturas')); 
+        return view('facturas.index', compact('facturas'));
     }
 
     /**
-     * Muestra un formulario  para crear una nueva factura
+     * Muestra un formulario para crear una nueva factura
      */
     public function create()
     {
-        return view('facturas.create');
+        $proveedores = \App\Models\Proveedor::orderBy('nombre')->get();
+        return view('facturas.create', compact('proveedores'));
     }
 
     /**
-     * Guarda en la base de datos la factura recien creada
+     * Guarda en la base de datos la factura recién creada
      */
     public function store(Request $request)
     {
@@ -40,16 +41,16 @@ class FacturaController extends Controller
             'codigo_proveedor' => 'required|exists:proveedores,codigo'
         ]);
 
-        //Crear la nueva factura con los datos validados
+        // Crear la nueva factura con los datos validados
         Factura::create($validated);
 
-        //redirige con mensaje de exito
-        return redirect()<>route('facturas.index')
-            ->with('success', 'Factura creada de manera correcta');
+        // Redirige con mensaje de éxito
+        $proveedores = \App\Models\Proveedor::orderBy('nombre')->get();
+        return redirect()->route('facturas.index', compact('proveedores'));
     }
 
     /**
-     * Muestra factura especifica
+     * Muestra factura específica
      */
     public function show(string $id)
     {
@@ -61,13 +62,14 @@ class FacturaController extends Controller
      * Muestra el formulario para editar una factura seleccionada
      */
     public function edit(string $id)
-    {
-        $factura = Factura::findOrFail($id);
-        return view('facturas.edit', compact('factura'));
-    }
+{
+    $factura = Factura::findOrFail($id);
+    $proveedores = \App\Models\Proveedor::orderBy('nombre')->get();
+    return view('facturas.edit', compact('factura', 'proveedores'));
+}
 
     /**
-     * Actualiza la factura que se edito en el formulario anterior
+     * Actualiza la factura que se editó en el formulario anterior
      */
     public function update(Request $request, string $id)
     {
@@ -85,11 +87,11 @@ class FacturaController extends Controller
         $factura->update($request->all());
 
         return redirect()->route('facturas.index')
-            -with('success', 'Factura actualizada de manera exitosa.');
+            ->with('success', 'Factura actualizada de manera exitosa.');
     }
 
     /**
-     * Elimina una factura especificado
+     * Elimina una factura especificada
      */
     public function destroy(string $id)
     {
@@ -97,6 +99,6 @@ class FacturaController extends Controller
         $factura->delete();
 
         return redirect()->route('facturas.index')
-            -with('success', 'Factura eliminada de manera exitosa.');
+            ->with('success', 'Factura eliminada de manera exitosa.');
     }
 }

@@ -1,10 +1,10 @@
-@extends('layout.app')
+@extends('layouts.app')
 
 @section('content')
 <div class = "container">
     <h1> Editar proveedor</h1>
 
-    @if ($errors-> any/())
+    @if ($errors-> any())
         <div class="alert alert-danger">
             <ul>
                 @foreach ($errors->all() as $error)
