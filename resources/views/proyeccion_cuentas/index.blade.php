@@ -61,7 +61,6 @@
                     <th scope="col">Concepto</th>
                     <th scope="col">Débito</th>
                     <th scope="col">Haber</th>
-                    <th scope="col">Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -71,14 +70,6 @@
                         <td>Cheque * {{ $cheque->numero_cheque }}</td>
                         <td>${{ number_format($cheque->debe, 2, ',', '.') }}</td>
                         <td>${{ number_format($cheque->haber, 2, ',', '.') }}</td>
-                        <td>
-                            <a href="#" class="btn btn-sm btn-outline-primary me-1">Editar</a>
-                            <form action="#" method="POST" class="d-inline">
-                                @csrf
-                                @method('DELETE')
-                                <button class="btn btn-sm btn-outline-danger" onclick="return confirm('¿Eliminar este registro?')">Eliminar</button>
-                            </form>
-                        </td>
                     </tr>
                 @empty
                     <tr><td colspan="5" class="text-center text-muted">No hay proyecciones cargadas.</td></tr>
