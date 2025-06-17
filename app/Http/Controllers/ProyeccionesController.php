@@ -68,6 +68,11 @@ public function index(Request $request)
         $proyecciones = $query->orderBy('fecha', 'asc')->get();
 
         $pdf = Pdf::loadView('proyeccion_cuentas.pdf', compact('proyecciones', 'bancoNombre'));
+        
+        if($bancoNombre == null)
+        {
+            $bancoNombre = 'Todos';
+        }
 
         return $pdf->download('proyecciones_filtradas-' . $bancoNombre . '.pdf');
     }
