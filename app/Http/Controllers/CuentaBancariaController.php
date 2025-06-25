@@ -24,7 +24,6 @@ class CuentaBancariaController extends Controller
     {
         $validated = $request->validate([
             'numero_banco' => 'required|exists:bancos,numero',
-            'alias' => 'required|string|max:255|unique:cuentas,alias' . (isset($cuenta) ? ',' . $cuenta->codigo . ',codigo' : ''),
         ]);
         CuentaBancaria::create($validated);
         return redirect()->route('cuentas.index')->with('success', 'Cuenta creada correctamente.');
@@ -40,15 +39,16 @@ class CuentaBancariaController extends Controller
     {
         $validated = $request->validate([
             'numero_banco' => 'required|exists:bancos,numero',
-            'alias' => 'required|string|max:255|unique:cuentas,alias' . (isset($cuenta) ? ',' . $cuenta->codigo . ',codigo' : ''),
+            'numero_cuenta' => 'required|integer'
         ]);
+
         $cuenta->update($validated);
-        return redirect()->route('cuentas.index')->with('success', 'Cuenta actualizada correctamente.');
+        return redirect()->route('bancos.index')->with('success', 'Cuenta actualizada correctamente.');
     }
 
     public function destroy(CuentaBancaria $cuenta)
     {
         $cuenta->delete();
-        return redirect()->route('cuentas.index')->with('success', 'Cuenta eliminada correctamente.');
+        return redirect()->route('bancos.index')->with('success', 'Cuenta eliminada correctamente.');
     }
 }

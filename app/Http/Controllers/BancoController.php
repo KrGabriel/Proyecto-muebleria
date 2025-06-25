@@ -7,9 +7,9 @@ use Illuminate\Http\Request;
 
 class BancoController extends Controller
 {
-    public function index()
+public function index()
     {
-        $bancos = Banco::all();
+        $bancos = Banco::with('cuentas')->get(); // Eager loading
         return view('bancos.index', compact('bancos'));
     }
 

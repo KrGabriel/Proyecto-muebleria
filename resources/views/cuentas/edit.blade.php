@@ -22,19 +22,14 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Número de Cuenta:</label>
-                        <input type="text" name="numero" class="form-control" value="{{ old('numero', $cuenta->numero) }}" required>
-                        @error('numero') <div class="text-danger">{{ $message }}</div> @enderror
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Alias:</label>
-                        <input type="text" name="alias" class="form-control" value="{{ old('alias', $cuenta->alias) }}">
-                        @error('alias') <div class="text-danger">{{ $message }}</div> @enderror
+                        <input type="text" name="numero_cuenta" class="form-control" value="{{ old('numero_cuenta', $cuenta->numero_cuenta) }}" required>
+                        @error('numero_cuenta') <div class="text-danger">{{ $message }}</div> @enderror
                     </div>
                     <div class="d-flex justify-content-between">
                         <button type="submit" class="btn btn-success btn-lg">
                             <i class="bi bi-save"></i> Actualizar
                         </button>
-                        <a href="{{ route('cuentas.index') }}" class="btn btn-secondary btn-lg">
+                        <a href="{{ route('bancos.index') }}" class="btn btn-secondary btn-lg">
                             <i class="bi bi-arrow-left"></i> Volver
                         </a>
                     </div>
