@@ -33,7 +33,7 @@
                         <button type="submit" class="btn btn-success btn-lg">
                             <i class="bi bi-save"></i> Guardar
                         </button>
-                        <a href="{{ route('cuentas.index') }}" class="btn btn-secondary btn-lg">
+                        <a href="{{ route('bancos.index') }}" class="btn btn-secondary btn-lg">
                             <i class="bi bi-arrow-left"></i> Volver
                         </a>
                     </div>

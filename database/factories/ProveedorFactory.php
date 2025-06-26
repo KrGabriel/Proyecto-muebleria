@@ -9,6 +9,7 @@ class ProveedorFactory extends Factory
     public function definition(): array
     {
         return [
+            'numero_proveedor' => $this->faker->unique()->numberBetween(1000, 9999), // ← agregado
             'nombre' => $this->faker->company(),
             'direccion' => $this->faker->optional()->address(),
             'telefono' => $this->faker->optional()->phoneNumber(),

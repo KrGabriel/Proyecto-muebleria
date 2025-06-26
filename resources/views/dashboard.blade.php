@@ -16,11 +16,6 @@
                             </a>
                         </div>
                         <div class="col-md-4">
-                            <a href="{{ route('cuentas.index') }}" class="btn btn-outline-primary w-100 py-3">
-                                <i class="bi bi-credit-card-2-front fs-2"></i><br>Cuentas Bancarias
-                            </a>
-                        </div>
-                        <div class="col-md-4">
                             <a href="{{ route('cheques.index') }}" class="btn btn-outline-primary w-100 py-3">
                                 <i class="bi bi-cash-coin fs-2"></i><br>Cheques
                             </a>

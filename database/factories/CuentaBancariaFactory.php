@@ -14,7 +14,7 @@ class CuentaBancariaFactory extends Factory
     {
         return [
             'numero_banco' => Banco::inRandomOrder()->first()->numero ?? Banco::factory(),
-            'alias' => $this->faker->optional()->userName(),
+            'numero_cuenta' => $this->faker->unique()->randomNumber(8, true),
         ];
     }
 }
