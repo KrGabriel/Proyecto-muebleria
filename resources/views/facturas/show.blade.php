@@ -10,8 +10,8 @@
                 </div>
                 <div class="card-body">
                     <dl class="row">
-                        <dt class="col-sm-4">ID</dt>
-                        <dd class="col-sm-8">{{ $factura->id }}</dd>
+                        <dt class="col-sm-4">Numero factura</dt>
+                        <dd class="col-sm-8">{{ $factura->numero }}</dd>
 
                         <dt class="col-sm-4">Proveedor</dt>
                         <dd class="col-sm-8">{{ $factura->proveedor ? $factura->proveedor->nombre : '-' }}</dd>
@@ -23,10 +23,10 @@
                         <dd class="col-sm-8">${{ number_format($factura->neto, 2, ',', '.') }}</dd>
 
                         <dt class="col-sm-4">Tasa</dt>
-                        <dd class="col-sm-8">${{ number_format($factura->tasa, 2, ',', '.') }}</dd>
+                        <dd class="col-sm-8">%{{ number_format($factura->tasa, 2, ',', '.') }}</dd>
 
                         <dt class="col-sm-4">Sobretasa</dt>
-                        <dd class="col-sm-8">${{ number_format($factura->sobretasa, 2, ',', '.') }}</dd>
+                        <dd class="col-sm-8">%{{ number_format($factura->sobretasa, 2, ',', '.') }}</dd>
 
                         <dt class="col-sm-4">Total</dt>
                         <dd class="col-sm-8">${{ number_format($factura->total, 2, ',', '.') }}</dd>

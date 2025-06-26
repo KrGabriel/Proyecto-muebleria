@@ -6,13 +6,38 @@ use App\Models\Cheque;
 use App\Models\CuentaBancaria;
 use App\Models\Factura;
 use Illuminate\Http\Request;
+use App\Models\Proveedor;
 
 class ChequeController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $cheques = Cheque::with(['cuenta', 'factura'])->orderBy('fecha', 'desc')->paginate(5);
-        return view('cheques.index', compact('cheques'));
+        $query = Cheque::with(['factura.proveedor', 'cuenta.banco']);
+
+        if ($request->filled('fecha_desde')) {
+            $query->where('fecha', '>=', $request->fecha_desde);
+        }
+
+        if ($request->filled('fecha_hasta')) {
+            $query->where('fecha', '<=', $request->fecha_hasta);
+        }
+
+        if ($request->filled('proveedor')) {
+            $query->whereHas('factura.proveedor', function ($q) use ($request) {
+                $q->where('codigo', $request->proveedor);
+            });
+        }
+
+        if ($request->filled('numero_factura')) {
+            $query->whereHas('factura', function ($q) use ($request) {
+                $q->where('numero', 'like', '%' . $request->numero_factura . '%');
+            });
+        }
+
+        $cheques = $query->orderBy('fecha', 'desc')->paginate(15);
+        $proveedores = Proveedor::orderBy('nombre')->get();
+
+        return view('cheques.index', compact('cheques', 'proveedores'));
     }
 
     public function create()

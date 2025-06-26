@@ -11,6 +11,38 @@
     @if (session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
+
+    <!-- Form para filtros de cheques -->
+     <form method="GET" action="{{ route('cheques.index') }}" class="row g-3 mb-4">
+        <div class="col-md-3">
+            <label>Desde:</label>
+            <input type="date" name="fecha_desde" value="{{ request('fecha_desde') }}" class="form-control">
+        </div>
+        <div class="col-md-3">
+            <label>Hasta:</label>
+            <input type="date" name="fecha_hasta" value="{{ request('fecha_hasta') }}" class="form-control">
+        </div>
+        <div class="col-md-3">
+            <label>Proveedor:</label>
+            <select name="proveedor" class="form-control">
+                <option value="">-- Todos --</option>
+                @foreach($proveedores as $proveedor)
+                    <option value="{{ $proveedor->codigo }}" {{ request('proveedor') == $proveedor->codigo ? 'selected' : '' }}>
+                        {{ $proveedor->nombre }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label>Número de factura:</label>
+            <input type="text" name="numero_factura" value="{{ request('numero_factura') }}" class="form-control">
+        </div>
+        <div class="col-md-12 text-end">
+            <button type="submit" class="btn btn-primary mt-2">Filtrar</button>
+            <a href="{{ route('cheques.index') }}" class="btn btn-secondary mt-2">Limpiar</a>
+        </div>
+    </form>
+    
     <div class="card shadow">
         <div class="card-body p-0">
             <table class="table table-hover mb-0">
