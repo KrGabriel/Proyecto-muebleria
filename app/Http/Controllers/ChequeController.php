@@ -12,9 +12,10 @@ class ChequeController extends Controller
 {
     public function index(Request $request)
     {
+        $proveedores = Proveedor::all();
         $cheques = Cheque::with(['cuenta', 'factura'])->orderBy('fecha', 'desc')->paginate(5);
         $cuentas = CuentaBancaria::all();
-        return view('cheques.index', compact('cheques', 'cuentas'));
+        return view('cheques.index', compact('cheques', 'cuentas', 'proveedores'));
     }
 
     public function create()

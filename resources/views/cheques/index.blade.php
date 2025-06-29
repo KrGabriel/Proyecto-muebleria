@@ -61,7 +61,7 @@
                     @forelse ($cheques as $cheque)
                         <tr>
                             <td>{{ $cheque->cuenta ? $cheque->cuenta->numero_cuenta : '-' }}</td>
-                            <td>{{ $cheque->factura ? $cheque->factura->id : '-' }}</td>
+                            <td>{{ $cheque->factura ? $cheque->factura->numero : '-' }}</td>
                             <td>{{ $cheque->numero_cheque }}</td>
                             <td>{{ $cheque->debe }}</td>
                             <td>{{ $cheque->haber }}</td>
