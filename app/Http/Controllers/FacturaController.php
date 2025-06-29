@@ -57,18 +57,14 @@ class FacturaController extends Controller
             'fecha' => 'required|date',
             'numero' => 'required|max:50',
             'neto' => 'required|numeric|min:0',
-            'tasa' => 'required|numeric|min:0',
-            'sobretasa' => 'nullable|numeric|min:0',
             'total' => 'required|numeric|min:0',
             'codigo_proveedor' => 'required|exists:proveedores,codigo'
         ]);
+        $factura = Factura::create($validated);
 
-        // Crear la nueva factura con los datos validados
-        Factura::create($validated);
-
-        // Redirige con mensaje de éxito
-        $proveedores = \App\Models\Proveedor::orderBy('nombre')->get();
-        return redirect()->route('facturas.index', compact('proveedores'));
+        // Redirige a crear cheque y pasa el id de la factura
+        return redirect()->route('cheques.create', ['factura_id' => $factura->id])
+            ->with('success', 'Factura creada. Ahora agregue los cheques.');
     }
 
     /**

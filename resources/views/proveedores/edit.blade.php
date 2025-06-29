@@ -19,7 +19,7 @@
 
     <div class="form-group">
         <label for="nombre">Nombre:</label>
-        <input type="text" name="nombre" value="{{ old('nombre', $proveedor->nombre) }}" class= form-control" required>
+        <input type="text" name="nombre" value="{{ old('nombre', $proveedor->nombre) }}" class= "form-control" required>
     </div>
 
     <div class="form-group">

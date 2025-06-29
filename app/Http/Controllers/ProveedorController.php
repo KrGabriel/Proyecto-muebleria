@@ -92,9 +92,10 @@ class ProveedorController extends Controller
     public function destroy(string $id)
     {
         $proveedor = Proveedor::findOrFail($id);
-        $proveedor->delete();
+        $proveedor->activo = false; // Desactiva el proveedor en lugar de eliminarlo
+        $proveedor->save();
 
-        return redirect()->route('proveedores.index')->with('success', 'Proveedor eliminado');
+        return redirect()->route('proveedores.index')->with('success', 'Proveedor eliminado.');
     }
 
 
