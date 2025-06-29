@@ -59,9 +59,11 @@
                 </a>
                 <div class="ms-auto" style="margin-right:10px;">
                     @guest
-                        <a href="{{ route('login') }}" class="btn btn-outline-primary">
-                            <i class="bi bi-box-arrow-in-right"></i> Login
-                        </a>
+                        @if (!request()->routeIs('login'))
+                            <a href="{{ route('login') }}" class="btn btn-outline-primary">
+                                <i class="bi bi-box-arrow-in-right"></i> Iniciar sesión
+                            </a>
+                        @endif
                     @else
                         <form action="{{ route('logout') }}" method="POST" class="d-inline">
                             @csrf

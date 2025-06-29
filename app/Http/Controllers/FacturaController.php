@@ -5,17 +5,39 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Factura;
+use App\Models\Proveedor;
 
 class FacturaController extends Controller
 {
     /**
      * Muestra una lista de facturas
      */
-    public function index()
+    public function index(Request $request)
     {
-        $facturas = Factura::orderBy('codigo_proveedor')->orderBy('fecha', 'desc')->paginate(5);
-        return view('facturas.index', compact('facturas'));
+        $query = Factura::with('proveedor');
+
+        if ($request->filled('fecha_desde')) {
+            $query->where('fecha', '>=', $request->fecha_desde);
+        }
+
+        if ($request->filled('fecha_hasta')) {
+            $query->where('fecha', '<=', $request->fecha_hasta);
+        }
+
+        if ($request->filled('proveedor')) {
+            $query->where('codigo_proveedor', $request->proveedor);
+        }
+
+        if ($request->filled('numero_factura')) {
+            $query->where('numero', 'like', '%' . $request->numero_factura . '%');
+        }
+
+        $facturas = $query->orderBy('fecha', 'desc')->paginate(15);
+        $proveedores = Proveedor::orderBy('nombre')->get();
+
+        return view('facturas.index', compact('facturas', 'proveedores'));
     }
+
 
     /**
      * Muestra un formulario para crear una nueva factura

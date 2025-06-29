@@ -6,10 +6,11 @@ use App\Models\Cheque;
 use App\Models\CuentaBancaria;
 use App\Models\Factura;
 use Illuminate\Http\Request;
+use App\Models\Proveedor;
 
 class ChequeController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $cheques = Cheque::with(['cuenta', 'factura'])->orderBy('fecha', 'desc')->paginate(5);
         $cuentas = CuentaBancaria::all();
