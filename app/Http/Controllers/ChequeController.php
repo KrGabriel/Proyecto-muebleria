@@ -12,9 +12,32 @@ class ChequeController extends Controller
 {
     public function index(Request $request)
     {
-        $cheques = Cheque::with(['cuenta', 'factura'])->orderBy('fecha', 'desc')->paginate(5);
-        $cuentas = CuentaBancaria::all();
-        return view('cheques.index', compact('cheques', 'cuentas'));
+        $query = Cheque::with(['factura.proveedor', 'cuenta.banco']);
+
+        if ($request->filled('fecha_desde')) {
+            $query->where('fecha', '>=', $request->fecha_desde);
+        }
+
+        if ($request->filled('fecha_hasta')) {
+            $query->where('fecha', '<=', $request->fecha_hasta);
+        }
+
+        if ($request->filled('proveedor')) {
+            $query->whereHas('factura.proveedor', function ($q) use ($request) {
+                $q->where('codigo', $request->proveedor);
+            });
+        }
+
+        if ($request->filled('numero_factura')) {
+            $query->whereHas('factura', function ($q) use ($request) {
+                $q->where('numero', 'like', '%' . $request->numero_factura . '%');
+            });
+        }
+
+        $cheques = $query->orderBy('fecha', 'desc')->paginate(15);
+        $proveedores = Proveedor::orderBy('nombre')->get();
+
+        return view('cheques.index', compact('cheques', 'proveedores'));
     }
 
     public function create()
