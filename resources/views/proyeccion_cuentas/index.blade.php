@@ -72,10 +72,7 @@
 
                 <div class="mb-3">
                     <label class="form-label">¿Solo si?</label>
-                    <select name="solo_si" class="form-select">
-                        <option value="0">Todos</option>
-                        <option value="1" {{ request('solo_si') === '1' ? 'selected' : '' }}>Solo sí</option>
-                    </select>
+                    <input type="checkbox" name="solo_si" value="1" {{ request('solo_si') ? 'checked' : '' }}>
                 </div>
             </div>
             <div class="modal-footer">
@@ -134,6 +131,9 @@
         <input type="hidden" name="banco" value="{{ $bancoFiltro }}">
         <input type="hidden" name="desde" value="{{ $desde }}">
         <input type="hidden" name="hasta" value="{{ $hasta }}">
+        @if(request('solo_si'))
+            <input type="hidden" name="solo_si" value="1">
+        @endif
 
         <button type="submit" class="btn btn-outline-dark">
             🖨️ Imprimir cheques filtrados

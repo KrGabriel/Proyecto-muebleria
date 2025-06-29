@@ -9,35 +9,35 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class ProyeccionesController extends Controller
 {
-public function index(Request $request)
-{
-    $bancos = Banco::orderBy('nombre')->get();
+    public function index(Request $request)
+    {
+        $bancos = Banco::orderBy('nombre')->get();
 
-    $query = Cheque::query();
+        $query = Cheque::query();
 
-    if ($request->filled('banco')) {
-        $bancoFiltro = $request->banco;
-        $query->whereHas('cuenta.banco', function ($q) use ($bancoFiltro) {
-            $q->where('nombre', $bancoFiltro);
-        });
+        if ($request->filled('banco')) {
+            $bancoFiltro = $request->banco;
+            $query->whereHas('cuenta.banco', function ($q) use ($bancoFiltro) {
+                $q->where('nombre', $bancoFiltro);
+            });
+        }
+
+        if ($request->filled('desde')) {
+            $query->whereDate('fecha', '>=', $request->desde);
+        }
+
+        if ($request->filled('hasta')) {
+            $query->whereDate('fecha', '<=', $request->hasta);
+        }
+
+        if ($request->boolean('solo_si')) {
+            $query->where('entro', true);
+        }
+
+        $proyecciones = $query->orderBy('fecha', 'asc')->paginate(10)->appends($request->query());
+
+        return view('proyeccion_cuentas.index', compact('proyecciones', 'bancos'));
     }
-
-    if ($request->filled('desde')) {
-        $query->whereDate('fecha', '>=', $request->desde);
-    }
-
-    if ($request->filled('hasta')) {
-        $query->whereDate('fecha', '<=', $request->hasta);
-    }
-
-    if ($request->filled('solo_si') && $request->solo_si === '1') {
-        $query->where('entro', true);
-    }
-
-    $proyecciones = $query->orderBy('fecha', 'asc')->paginate(10)->appends($request->query());
-
-    return view('proyeccion_cuentas.index', compact('proyecciones', 'bancos'));
-}
 
     
     public function exportarPDF(Request $request)
@@ -61,7 +61,7 @@ public function index(Request $request)
             $query->whereDate('fecha', '<=', $request->hasta);
         }
 
-        if ($request->filled('solo_si') && $request->solo_si === '1') {
+        if ($request->boolean('solo_si')) {
             $query->where('entro', true);
         }
 
