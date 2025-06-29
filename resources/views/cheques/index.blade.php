@@ -27,7 +27,7 @@
             <select name="proveedor" class="form-control">
                 <option value="">-- Todos --</option>
                 @foreach($proveedores as $proveedor)
-                    <option value="{{ $proveedor->codigo }}" {{ request('proveedor') == $proveedor->codigo ? 'selected' : '' }}>
+                    <option value="{{ $proveedor->numero }}" {{ request('proveedor') == $proveedor->codigo ? 'selected' : '' }}>
                         {{ $proveedor->nombre }}
                     </option>
                 @endforeach
@@ -61,7 +61,7 @@
                     @forelse ($cheques as $cheque)
                         <tr>
                             <td>{{ $cheque->cuenta ? $cheque->cuenta->numero_cuenta : '-' }}</td>
-                            <td>{{ $cheque->factura ? $cheque->factura->id : '-' }}</td>
+                            <td>{{ $cheque->factura ? $cheque->factura->numero : '-' }}</td>
                             <td>{{ $cheque->numero_cheque }}</td>
                             <td>{{ $cheque->debe }}</td>
                             <td>{{ $cheque->haber }}</td>
