@@ -12,7 +12,8 @@ class ChequeController extends Controller
     public function index()
     {
         $cheques = Cheque::with(['cuenta', 'factura'])->orderBy('fecha', 'desc')->paginate(5);
-        return view('cheques.index', compact('cheques'));
+        $cuentas = CuentaBancaria::all();
+        return view('cheques.index', compact('cheques', 'cuentas'));
     }
 
     public function create()

@@ -14,7 +14,7 @@
                         <label class="form-label">Cuenta Bancaria:</label>
                         <select name="codigo_cuenta" class="form-select" required>
                             @foreach($cuentas as $cuenta)
-                                <option value="{{ $cuenta->codigo }}">{{ $cuenta->numero }}</option>
+                                <option value="{{ $cuenta->codigo }}">{{ $cuenta->numero_cuenta }}</option>
                             @endforeach
                         </select>
                         @error('codigo_cuenta') <div class="text-danger">{{ $message }}</div> @enderror
