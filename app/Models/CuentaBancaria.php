@@ -14,11 +14,10 @@ class CuentaBancaria extends Model
     public $incrementing = true;
     public $timestamps = false;
 
-    protected $fillable = [
-        'numero_banco',
-        'alias',
-    ];
+    protected $fillable = ['numero_cuenta',
+                            'numero_banco'];
 
+                            
     public function banco()
     {
         return $this->belongsTo(Banco::class, 'numero_banco', 'numero');

@@ -74,6 +74,7 @@ class ChequeController extends Controller
         $validated = $request->validate([
             'entro' => 'nullable|boolean',
             'codigo_cuenta' => 'required|exists:cuentas,codigo',
+            'numero_cuenta' => 'required|integer|max:2147483647',
             'numero_cheque' => 'required|string|max:50|unique:cheques,numero_cheque,' . $cheque->id . ',id',
             'fecha' => 'required|date',
             'debe' => 'required|numeric|min:0',
@@ -81,6 +82,7 @@ class ChequeController extends Controller
             'codigo_factura' => 'nullable|exists:facturas,id',
         ]);
         $cheque->update($validated);
+
         return redirect()->route('cheques.index')->with('success', 'Cheque actualizado correctamente.');
     }
 
