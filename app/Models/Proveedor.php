@@ -20,7 +20,8 @@ class Proveedor extends Model
         'telefono',
         'localidad',
         'provincia',
-        'fecha_ultima_compra'
+        'fecha_ultima_compra',
+        'activo'
     ];
 
     public function facturas()

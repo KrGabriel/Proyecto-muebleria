@@ -27,16 +27,6 @@
                             @error('neto') <div class="text-danger">{{ $message }}</div> @enderror
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Tasa (%):</label>
-                            <input type="number" name="tasa" id="tasa" class="form-control" value="{{ old('tasa') }}" min="0" step="0.01" required>
-                            @error('tasa') <div class="text-danger">{{ $message }}</div> @enderror
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Sobretasa (%):</label>
-                            <input type="number" name="sobretasa" id="sobretasa" class="form-control" value="{{ old('sobretasa') }}" min="0" step="0.01">
-                            @error('sobretasa') <div class="text-danger">{{ $message }}</div> @enderror
-                        </div>
-                        <div class="mb-3">
                             <label class="form-label">Total:</label>
                             <input type="number" name="total" id="total" class="form-control" value="{{ old('total') }}" min="0" step="0.01" readonly>
                             @error('total') <div class="text-danger">{{ $message }}</div> @enderror
@@ -68,22 +58,3 @@
     </div>
 </div>
 @endsection
-
-@push('scripts')
-<script>
-function calcularTotal() {
-    let neto = parseFloat(document.getElementById('neto').value) || 0;
-    let tasa = parseFloat(document.getElementById('tasa').value) || 0;
-    let sobretasa = parseFloat(document.getElementById('sobretasa').value) || 0;
-    let total = neto + (neto * tasa / 100) + (neto * sobretasa / 100);
-    document.getElementById('total').value = total.toFixed(2);
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('neto').addEventListener('input', calcularTotal);
-    document.getElementById('tasa').addEventListener('input', calcularTotal);
-    document.getElementById('sobretasa').addEventListener('input', calcularTotal);
-    calcularTotal();
-});
-</script>
-@endpush

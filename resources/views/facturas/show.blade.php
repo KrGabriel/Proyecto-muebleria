@@ -22,12 +22,6 @@
                         <dt class="col-sm-4">Neto</dt>
                         <dd class="col-sm-8">${{ number_format($factura->neto, 2, ',', '.') }}</dd>
 
-                        <dt class="col-sm-4">Tasa</dt>
-                        <dd class="col-sm-8">%{{ number_format($factura->tasa, 2, ',', '.') }}</dd>
-
-                        <dt class="col-sm-4">Sobretasa</dt>
-                        <dd class="col-sm-8">%{{ number_format($factura->sobretasa, 2, ',', '.') }}</dd>
-
                         <dt class="col-sm-4">Total</dt>
                         <dd class="col-sm-8">${{ number_format($factura->total, 2, ',', '.') }}</dd>
                     </dl>

@@ -39,9 +39,9 @@ class CuentaBancariaController extends Controller
     {
         $validated = $request->validate([
             'numero_banco' => 'required|exists:bancos,numero',
-            'numero_cuenta' => 'required|integer'
+            'numero_cuenta' => 'required|integer',
+            'alias' => 'nullable|string|max:255'
         ]);
-
         $cuenta->update($validated);
         return redirect()->route('bancos.index')->with('success', 'Cuenta actualizada correctamente.');
     }

@@ -18,19 +18,14 @@
                             @error('fecha') <div class="text-danger">{{ $message }}</div> @enderror
                         </div>
                         <div class="mb-3">
+                            <label class="form-label">Número:</label>
+                            <input type="text" name="numero" class="form-control" value="{{ old('numero', $factura->numero) }}" required>
+                            @error('numero') <div class="text-danger">{{ $message }}</div> @enderror
+                        </div>
+                        <div class="mb-3">
                             <label class="form-label">Neto:</label>
                             <input type="number" name="neto" class="form-control" value="{{ old('neto', $factura->neto) }}" min="0" step="0.01" required>
                             @error('neto') <div class="text-danger">{{ $message }}</div> @enderror
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Tasa:</label>
-                            <input type="number" name="tasa" class="form-control" value="{{ old('tasa', $factura->tasa) }}" min="0" step="0.01" required>
-                            @error('tasa') <div class="text-danger">{{ $message }}</div> @enderror
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Sobretasa:</label>
-                            <input type="number" name="sobretasa" class="form-control" value="{{ old('sobretasa', $factura->sobretasa) }}" min="0" step="0.01">
-                            @error('sobretasa') <div class="text-danger">{{ $message }}</div> @enderror
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Total:</label>

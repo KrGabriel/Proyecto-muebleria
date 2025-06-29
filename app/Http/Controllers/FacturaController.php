@@ -19,38 +19,28 @@ class FacturaController extends Controller
         if ($request->filled('fecha_desde')) {
             $query->where('fecha', '>=', $request->fecha_desde);
         }
-
         if ($request->filled('fecha_hasta')) {
             $query->where('fecha', '<=', $request->fecha_hasta);
         }
-
         if ($request->filled('proveedor')) {
             $query->where('codigo_proveedor', $request->proveedor);
         }
-
         if ($request->filled('numero_factura')) {
             $query->where('numero', 'like', '%' . $request->numero_factura . '%');
         }
 
         $facturas = $query->orderBy('fecha', 'desc')->paginate(15);
-        $proveedores = Proveedor::orderBy('nombre')->get();
+        $proveedores = \App\Models\Proveedor::where('activo', true)->orderBy('nombre')->get();
 
         return view('facturas.index', compact('facturas', 'proveedores'));
     }
 
-
-    /**
-     * Muestra un formulario para crear una nueva factura
-     */
     public function create()
     {
-        $proveedores = \App\Models\Proveedor::orderBy('nombre')->get();
+        $proveedores = \App\Models\Proveedor::where('activo', true)->orderBy('nombre')->get();
         return view('facturas.create', compact('proveedores'));
     }
 
-    /**
-     * Guarda en la base de datos la factura recién creada
-     */
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -67,36 +57,19 @@ class FacturaController extends Controller
             ->with('success', 'Factura creada. Ahora agregue los cheques.');
     }
 
-    /**
-     * Muestra factura específica
-     */
-    public function show(string $id)
+    public function edit($id)
     {
         $factura = Factura::findOrFail($id);
-        return view('facturas.show', compact('factura'));
+        $proveedores = \App\Models\Proveedor::where('activo', true)->orderBy('nombre')->get();
+        return view('facturas.edit', compact('factura', 'proveedores'));
     }
 
-    /**
-     * Muestra el formulario para editar una factura seleccionada
-     */
-    public function edit(string $id)
-{
-    $factura = Factura::findOrFail($id);
-    $proveedores = \App\Models\Proveedor::orderBy('nombre')->get();
-    return view('facturas.edit', compact('factura', 'proveedores'));
-}
-
-    /**
-     * Actualiza la factura que se editó en el formulario anterior
-     */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
         $request->validate([
             'fecha' => 'required|date',
             'numero' => 'required|max:50',
             'neto' => 'required|numeric|min:0',
-            'tasa' => 'required|numeric|min:0',
-            'sobretasa' => 'nullable|numeric|min:0',
             'total' => 'required|numeric|min:0',
             'codigo_proveedor' => 'required|exists:proveedores,codigo'
         ]);

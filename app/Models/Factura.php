@@ -18,8 +18,6 @@ class Factura extends Model
         'fecha',
         'numero',
         'neto',
-        'tasa',
-        'sobretasa',
         'total',
         'codigo_proveedor'
     ];
