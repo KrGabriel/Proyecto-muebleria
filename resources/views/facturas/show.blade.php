@@ -19,9 +19,6 @@
                         <dt class="col-sm-4">Fecha</dt>
                         <dd class="col-sm-8">{{ $factura->fecha }}</dd>
 
-                        <dt class="col-sm-4">Neto</dt>
-                        <dd class="col-sm-8">${{ number_format($factura->neto, 2, ',', '.') }}</dd>
-
                         <dt class="col-sm-4">Total</dt>
                         <dd class="col-sm-8">${{ number_format($factura->total, 2, ',', '.') }}</dd>
                     </dl>

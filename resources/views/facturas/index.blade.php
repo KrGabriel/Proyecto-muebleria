@@ -51,7 +51,6 @@
                         <th>Numero Factura</th>
                         <th>Proveedor</th>
                         <th>Fecha</th>
-                        <th>Neto</th>
                         <th>Total</th>
                         <th>Acciones</th>
                     </tr>
@@ -62,7 +61,6 @@
                             <td>{{ $factura->numero }}</td>
                             <td>{{ $factura->proveedor ? $factura->proveedor->nombre : '-' }}</td>
                             <td>{{ $factura->fecha }}</td>
-                            <td>${{ number_format($factura->neto, 2, ',', '.') }}</td>
                             <td>${{ number_format($factura->total, 2, ',', '.') }}</td>
                             <td>
                                 <a href="{{ route('facturas.show', $factura->id) }}" class="btn btn-info btn-sm" title="Ver">

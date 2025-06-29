@@ -14,17 +14,8 @@ class CuentaBancaria extends Model
     public $incrementing = true;
     public $timestamps = false;
 
-<<<<<<< Updated upstream
     protected $fillable = ['numero_cuenta',
                             'numero_banco'];
-=======
-    protected $fillable = [
-        'numero_banco',
-        'numero_cuenta',
-        'alias',
-    ];
->>>>>>> Stashed changes
-
                             
     public function banco()
     {

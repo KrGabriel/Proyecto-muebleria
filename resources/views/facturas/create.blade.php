@@ -22,11 +22,6 @@
                             @error('numero') <div class="text-danger">{{ $message }}</div> @enderror
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Neto:</label>
-                            <input type="number" name="neto" id="neto" class="form-control" value="{{ old('neto') }}" min="0" step="0.01" required>
-                            @error('neto') <div class="text-danger">{{ $message }}</div> @enderror
-                        </div>
-                        <div class="mb-3">
                             <label class="form-label">Total:</label>
                             <input type="number" name="total" id="total" class="form-control" value="{{ old('total') }}" min="0" step="0.01" readonly>
                             @error('total') <div class="text-danger">{{ $message }}</div> @enderror

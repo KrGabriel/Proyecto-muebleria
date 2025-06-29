@@ -12,16 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('facturas', function (Blueprint $table) {
-            $table->id(); // Clave primaria: id
-            $table->unsignedBigInteger('codigo_proveedor'); // FK a proveedores
+            $table->id();
+            $table->unsignedBigInteger('codigo_proveedor');
             $table->date('fecha');
             $table->string('numero', 50);
-            $table->decimal('neto', 12, 2);
-            $table->decimal('tasa', 5, 2);
-            $table->decimal('sobretasa', 5, 2)->nullable();
             $table->decimal('total', 12, 2);
-
-            // Clave foránea
             $table->foreign('codigo_proveedor')->references('codigo')->on('proveedores')->onDelete('cascade');
             $table->timestamps();
         });

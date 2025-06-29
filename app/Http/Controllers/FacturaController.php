@@ -45,14 +45,12 @@ class FacturaController extends Controller
     {
         $validated = $request->validate([
             'fecha' => 'required|date',
-            'numero' => 'required|max:50',
-            'neto' => 'required|numeric|min:0',
+            'numero' => 'required|max:50',            
             'total' => 'required|numeric|min:0',
             'codigo_proveedor' => 'required|exists:proveedores,codigo'
         ]);
         $factura = Factura::create($validated);
 
-        // Redirige a crear cheque y pasa el id de la factura
         return redirect()->route('cheques.create', ['factura_id' => $factura->id])
             ->with('success', 'Factura creada. Ahora agregue los cheques.');
     }
@@ -69,7 +67,6 @@ class FacturaController extends Controller
         $request->validate([
             'fecha' => 'required|date',
             'numero' => 'required|max:50',
-            'neto' => 'required|numeric|min:0',
             'total' => 'required|numeric|min:0',
             'codigo_proveedor' => 'required|exists:proveedores,codigo'
         ]);

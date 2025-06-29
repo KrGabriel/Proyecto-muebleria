@@ -17,7 +17,6 @@ class Factura extends Model
     protected $fillable = [
         'fecha',
         'numero',
-        'neto',
         'total',
         'codigo_proveedor'
     ];

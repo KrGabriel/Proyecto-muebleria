@@ -13,7 +13,7 @@ class FacturasSeeder extends Seeder
             ->count(20)
             ->create()
             ->each(function ($factura) {
-                $factura->total = $factura->neto + $factura->neto * ($factura->tasa + ($factura->sobretasa ?? 0)) / 100;
+                $factura->total;
                 $factura->save();
             });
     }

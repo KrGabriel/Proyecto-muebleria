@@ -15,9 +15,6 @@ CREATE TABLE facturas (
     codigo_proveedor INT NOT NULL REFERENCES proveedores(codigo) ON DELETE CASCADE,
     fecha DATE NOT NULL,
     numero VARCHAR(50) NOT NULL,
-    neto NUMERIC(12,2) NOT NULL,
-    tasa NUMERIC(5,2) NOT NULL,
-    sobretasa NUMERIC(5,2),
     total NUMERIC(12,2) NOT NULL
 );
 
