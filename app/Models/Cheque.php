@@ -31,6 +31,6 @@ class Cheque extends Model
 
     public function factura()
     {
-        return $this->belongsTo(Factura::class, 'codigo_factura', 'id');
+        return $this->belongsTo(Factura::class, 'codigo_factura');
     }
 }

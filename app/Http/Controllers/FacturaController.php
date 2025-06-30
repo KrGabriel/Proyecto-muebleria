@@ -89,4 +89,10 @@ class FacturaController extends Controller
         return redirect()->route('facturas.index')
             ->with('success', 'Factura eliminada de manera exitosa.');
     }
+
+    public function show($id)
+    {
+        $factura = \App\Models\Factura::with('proveedor')->findOrFail($id);
+        return view('facturas.show', compact('factura'));
+    }
 }

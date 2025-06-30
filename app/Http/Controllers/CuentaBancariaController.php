@@ -24,10 +24,10 @@ class CuentaBancariaController extends Controller
     {
         $validated = $request->validate([
             'numero_banco' => 'required|exists:bancos,numero',
-            'numero_cuenta' => 'required|integer',
+            'numero_cuenta' => 'required|string|max:255',
         ]);
         CuentaBancaria::create($validated);
-        return redirect()->route('cuentas.index')->with('success', 'Cuenta creada correctamente.');
+        return redirect()->route('bancos.index')->with('success', 'Cuenta creada correctamente.');
     }
 
     public function edit(CuentaBancaria $cuenta)
@@ -40,7 +40,7 @@ class CuentaBancariaController extends Controller
     {
         $validated = $request->validate([
             'numero_banco' => 'required|exists:bancos,numero',
-            'numero_cuenta' => 'required|integer',
+            'numero_cuenta' => 'required|string|max:255',
             'alias' => 'nullable|string|max:255'
         ]);
         $cuenta->update($validated);

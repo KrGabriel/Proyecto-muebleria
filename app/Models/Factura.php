@@ -26,8 +26,8 @@ class Factura extends Model
         return $this->belongsTo(Proveedor::class, 'codigo_proveedor', 'codigo');
     }
 
-    public function cheque()
+    public function cheques()
     {
-        return $this->hasOne(Cheque::class, 'codigo_factura');
+        return $this->hasMany(Cheque::class, 'codigo_factura');
     }
 }

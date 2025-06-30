@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('numero_banco')
                 ->constrained('bancos', 'numero')
                 ->onDelete('cascade');
-            $table->integer('numero_cuenta');
+            $table->string('numero_cuenta');
             $table->timestamps();
         });
     }
