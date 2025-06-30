@@ -21,7 +21,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Número de Cuenta:</label>
-                        <input type="text" name="numero" class="form-control" value="{{ old('numero') }}" required>
+                        <input type="text" name="numero_cuenta" class="form-control" value="{{ old('numero') }}" required>
                         @error('numero') <div class="text-danger">{{ $message }}</div> @enderror
                     </div>
                     <div class="mb-3">

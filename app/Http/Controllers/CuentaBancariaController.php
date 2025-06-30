@@ -24,6 +24,7 @@ class CuentaBancariaController extends Controller
     {
         $validated = $request->validate([
             'numero_banco' => 'required|exists:bancos,numero',
+            'numero_cuenta' => 'required|integer',
         ]);
         CuentaBancaria::create($validated);
         return redirect()->route('cuentas.index')->with('success', 'Cuenta creada correctamente.');

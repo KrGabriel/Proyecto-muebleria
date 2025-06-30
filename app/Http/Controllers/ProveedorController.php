@@ -32,6 +32,7 @@ class ProveedorController extends Controller
     {
         //Valida los datos que se ingresan
         $validated = $request->validate([
+            'numero_proveedor' => 'required|integer|unique:proveedores,numero_proveedor',
             'nombre' => 'required|string|max:100',
             'direccion' => 'nullable|string',
             'telefono' => 'nullable|string|max:30',

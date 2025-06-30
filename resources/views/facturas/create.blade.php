@@ -23,7 +23,7 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Total:</label>
-                            <input type="number" name="total" id="total" class="form-control" value="{{ old('total') }}" min="0" step="0.01" readonly>
+                            <input type="number" name="total" id="total" class="form-control" value="{{ old('total') }}" min="0" step="0.01">
                             @error('total') <div class="text-danger">{{ $message }}</div> @enderror
                         </div>
                         <div class="mb-3">

@@ -24,6 +24,11 @@
         </div>
 
         <div class="mb-3">
+            <label>Número de Proveedor:</label>
+            <input type="number" name="numero_proveedor" class="form-control" value="{{ old('numero_proveedor') }}" required>
+        </div>
+
+        <div class="mb-3">
             <label>Dirección:</label>
             <input type="text" name="direccion" class="form-control" value="{{ old('direccion') }}">
         </div>
