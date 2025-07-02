@@ -1,5 +1,47 @@
 @extends('layouts.app')
+@push('scripts')
+<script>
+$(document).ready(function() {
+    $('#numero').on('keyup', function() {
+        let query = $(this).val();
+        if (query.length >= 2) {
+            $.ajax({
+                url: '/buscar-factura',
+                data: { q: query },
+                success: function(data) {
+                    let lista = $('#lista_facturas').empty();
+                    if (data.length === 0) {
+                        lista.append('<div class="list-group-item disabled">No se encontraron facturas</div>');
+                    } else {
+                        data.forEach(function(factura) {
+                            let text = factura.numero + ' - ' + (factura.nombre_proveedor ?? 'Sin proveedor');
+                            lista.append(`<button type="button" class="list-group-item list-group-item-action" data-codigo="${factura.id}" data-texto="${text}">${text}</button>`);
+                        });
+                    }
+                    lista.show();
+                }
+            });
+        } else {
+            $('#lista_facturas').hide();
+        }
+    });
 
+    $('#lista_facturas').on('click', 'button', function() {
+        let texto = $(this).data('texto');
+        let codigo = $(this).data('codigo');
+        $('#numero').val(texto);
+        $('#codigo_factura').val(codigo);
+        $('#lista_facturas').hide();
+    });
+
+    $(document).on('click', function(e) {
+        if (!$(e.target).closest('#numero_factura, #lista_facturas').length) {
+            $('#lista_facturas').hide();
+        }
+    });
+});
+</script>
+@endpush
 @section('content')
 <div class="row justify-content-center">
     <div class="col-md-8">
@@ -17,16 +59,14 @@
                                 <option value="{{ $cuenta->codigo }}">{{ $cuenta->numero_cuenta }}</option>
                             @endforeach
                         </select>
-                        @error('codigo_cuenta') <div class="text-danger">{{ $message }}</div> @enderror
-                    </div>
-                    <div class="mb-3">
+                        @error('codigo_cuenta') <div class="text-danger">{{ $message }}
+                    </div> 
+                    @enderror
+                    <div class="mb-3 position-relative">
                         <label class="form-label">Factura:</label>
-                        <select name="codigo_factura" class="form-select">
-                            <option value="">Sin factura</option>
-                            @foreach($facturas as $factura)
-                                <option value="{{ $factura->id }}">{{ $factura->id }}</option>
-                            @endforeach
-                        </select>
+                        <input type="text" name="numero" id="numero" class="form-control" autocomplete="off" placeholder="Buscar factura por número o proveedor" required>
+                        <input type="hidden" name="codigo_factura" id="codigo_factura">
+                        <div id="lista_facturas" class="list-group position-absolute w-100" style="z-index: 1000; max-height: 200px; overflow-y: auto;"></div>
                         @error('codigo_factura') <div class="text-danger">{{ $message }}</div> @enderror
                     </div>
                     <div class="mb-3">

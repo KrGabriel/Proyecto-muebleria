@@ -45,6 +45,8 @@ Route::middleware('auth')->group(function () {
     Route::get('proveedores/{id}/edit', [ProveedorController::class, 'edit'])->name('proveedores.edit');
     Route::put('proveedores/{id}', [ProveedorController::class, 'update'])->name('proveedores.update');
     Route::delete('proveedores/{id}', [ProveedorController::class, 'destroy'])->name('proveedores.destroy');
+    Route::get('/buscar-proveedor', [ProveedorController::class, 'buscar']);
+    Route::get('/buscar-factura',[FacturaController::class, 'buscar']);
 
     // Facturas
     Route::get('facturas', [FacturaController::class, 'index'])->name('facturas.index');

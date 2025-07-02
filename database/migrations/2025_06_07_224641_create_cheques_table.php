@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('cheques', function (Blueprint $table) {
             $table->id(); 
-            $table->boolean('entro');
+            $table->boolean('entro')->default(false);
             $table->foreignId('codigo_cuenta')
                 ->constrained('cuentas', 'codigo')
                 ->onDelete('cascade');

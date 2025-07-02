@@ -49,10 +49,10 @@ class ChequeController extends Controller
     public function create()
     {
         $cuentas = CuentaBancaria::all();
-        $facturas = Factura::all();
+        $facturas = Factura::with('proveedor')->get();
         return view('cheques.create', compact('cuentas', 'facturas'));
     }
-
+    
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -62,8 +62,9 @@ class ChequeController extends Controller
             'fecha' => 'required|date',
             'debe' => 'required|numeric|min:0',
             'haber' => 'required|numeric|min:0',
-            'codigo_factura' => 'nullable|exists:facturas,id',
+            'codigo_factura' => 'required|exists:facturas,id',  // obligatorio
         ]);
+
         Cheque::create($validated);
         return redirect()->route('cheques.index')->with('success', 'Cheque creado correctamente.');
     }
@@ -79,13 +80,12 @@ class ChequeController extends Controller
     {
         $validated = $request->validate([
             'entro' => 'nullable|boolean',
-            'codigo_cuenta' => 'required|exists:cuentas,codigo',
-            'numero_cuenta' => 'required|integer|max:2147483647',
+            'codigo_cuenta' => 'required|exists:cuentas,codigo', // corregido
             'numero_cheque' => 'required|string|max:50|unique:cheques,numero_cheque,' . $cheque->id . ',id',
             'fecha' => 'required|date',
             'debe' => 'required|numeric|min:0',
             'haber' => 'required|numeric|min:0',
-            'codigo_factura' => 'nullable|exists:facturas,id',
+            'codigo_factura' => 'required|exists:facturas,id', // obligatorio
         ]);
         $cheque->update($validated);
 

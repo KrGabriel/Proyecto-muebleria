@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Factura;
 use App\Models\Proveedor;
+use Illuminate\Support\Facades\DB;
 
 class FacturaController extends Controller
 {
@@ -14,7 +15,7 @@ class FacturaController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Factura::with('proveedor');
+        $query = Factura::with(['proveedor', 'cheques']);
 
         if ($request->filled('fecha_desde')) {
             $query->where('fecha', '>=', $request->fecha_desde);
@@ -30,15 +31,37 @@ class FacturaController extends Controller
         }
 
         $facturas = $query->orderBy('fecha', 'desc')->paginate(15);
-        $proveedores = \App\Models\Proveedor::where('activo', true)->orderBy('nombre')->get();
+        $proveedores = Proveedor::where('activo', true)->orderBy('nombre')->get();
 
         return view('facturas.index', compact('facturas', 'proveedores'));
     }
+
 
     public function create()
     {
         $proveedores = \App\Models\Proveedor::where('activo', true)->orderBy('nombre')->get();
         return view('facturas.create', compact('proveedores'));
+    }
+
+    public function buscar(Request $request)
+    {   
+        $query = $request->input('q');
+
+        $facturas = DB::table('facturas')
+            ->join('proveedores', 'facturas.codigo_proveedor', '=', 'proveedores.codigo')
+            ->where(function ($q) use ($query) {
+                $q->where('facturas.numero', 'ILIKE', "%{$query}%")
+                ->orWhere('proveedores.nombre', 'ILIKE', "%{$query}%");
+            })
+            ->limit(10)
+            ->get([
+                'facturas.id',
+                'facturas.numero',
+                'facturas.codigo_proveedor',
+                'proveedores.nombre as nombre_proveedor'
+            ]);
+
+        return response()->json($facturas);
     }
 
     public function store(Request $request)

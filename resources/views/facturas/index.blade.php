@@ -51,26 +51,81 @@
                 <tbody>
                     @forelse ($facturas as $factura)
                         <tr>
-                            <td>{{ $factura->numero }}</td>
-                            <td>{{ $factura->proveedor ? $factura->proveedor->nombre : '-' }}</td>
-                            <td>{{ $factura->fecha }}</td>
-                            <td>${{ number_format($factura->total, 2, ',', '.') }}</td>
-                            <td>
-                                <a href="{{ route('facturas.show', $factura->id) }}" class="btn btn-info btn-sm" title="Ver">
-                                    <i class="bi bi-eye"></i>
-                                </a>
-                                <a href="{{ route('facturas.edit', $factura->id) }}" class="btn btn-warning btn-sm" title="Editar">
-                                    <i class="bi bi-pencil-square"></i>
-                                </a>
-                                <form action="{{ route('facturas.destroy', $factura->id) }}" method="POST" style="display:inline;">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button class="btn btn-danger btn-sm" onclick="return confirm('¿Eliminar esta factura?')" title="Eliminar">
-                                        <i class="bi bi-trash"></i>
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
+                        <td>{{ $factura->numero }}</td>
+                        <td>{{ $factura->proveedor ? $factura->proveedor->nombre : '-' }}</td>
+                        <td>{{ $factura->fecha }}</td>
+                        <td>${{ number_format($factura->total, 2, ',', '.') }}</td>
+                        <td>
+                            <a href="{{ route('facturas.show', $factura->id) }}" class="btn btn-info btn-sm" title="Ver">
+                                <i class="bi bi-eye"></i>
+                            </a>
+                            <a href="{{ route('facturas.edit', $factura->id) }}" class="btn btn-warning btn-sm" title="Editar">
+                                <i class="bi bi-pencil-square"></i>
+                            </a>
+                            <form action="{{ route('facturas.destroy', $factura->id) }}" method="POST" style="display:inline;">
+                                @csrf
+                                @method('DELETE')
+                                <button class="btn btn-danger btn-sm" onclick="return confirm('¿Eliminar esta factura?')" title="Eliminar">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </form>
+                            <button class="btn btn-outline-secondary btn-sm ms-2" type="button" data-bs-toggle="collapse" data-bs-target="#chequesFactura{{ $factura->id }}">
+                                <i class="bi bi-chevron-down"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr class="collapse" id="chequesFactura{{ $factura->id }}">
+                        <td colspan="5" class="bg-light">
+                            @if ($factura->cheques->count())
+                                <table class="table table-sm table-hover mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Número</th>
+                                            <th>Banco</th>
+                                            <th>Fecha de Pago</th>
+                                            <th>Importe</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    @foreach ($factura->cheques as $cheque)
+                                        <tr>
+                                            <td>{{ $cheque->numero_cheque }}</td>
+
+                                            <td>
+                                                {{ $cheque->cuenta->banco->nombre ?? 'Sin Banco' }}
+                                            </td>
+
+                                            <td>{{ $cheque->fecha }}</td>
+
+                                            <td>${{ number_format($cheque->debe, 2, ',', '.') }}</td>
+
+                                            <td>
+                                                <a href="{{ route('cheques.edit', $cheque->id) }}" class="btn btn-warning btn-sm" title="Editar">
+                                                    <i class="bi bi-pencil-square"></i>
+                                                </a>
+                                                <form action="{{ route('cheques.destroy', $cheque->id) }}" method="POST" style="display:inline;">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button class="btn btn-danger btn-sm" onclick="return confirm('¿Eliminar este cheque?')" title="Eliminar">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                    </tbody>
+                                </table>
+                            @else
+                                <div class="p-2 text-muted">No hay cheques asociados a esta factura.</div>
+                            @endif
+
+                            <a href="{{ route('cheques.create', ['factura' => $factura->id]) }}" class="btn btn-success mt-2">
+                                <i class="bi bi-plus-circle"></i> Agregar Cheque
+                            </a>
+                        </td>
+                    </tr>
+
                     @empty
                         <tr>
                             <td colspan="6" class="text-center">No hay facturas cargadas.</td>

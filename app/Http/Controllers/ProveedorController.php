@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Proveedor;
+use Illuminate\Support\Facades\DB;
 
 class ProveedorController extends Controller
 {
@@ -64,6 +65,19 @@ class ProveedorController extends Controller
     {
         $proveedor = Proveedor::findOrFail($id);
         return view('proveedores.edit', compact('proveedor'));
+    }
+
+    public function buscar(Request $request)
+    {
+        $query = $request->input('q');
+
+        $proveedores = DB::table('proveedores')
+            ->where('nombre', 'ILIKE', "%{$query}%")
+            ->where('activo', true)
+            ->limit(10)
+            ->get(['codigo', 'nombre']);
+
+        return response()->json($proveedores);
     }
 
     /**
