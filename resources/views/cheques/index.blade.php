@@ -22,20 +22,13 @@
             <label>Hasta:</label>
             <input type="date" name="fecha_hasta" value="{{ request('fecha_hasta') }}" class="form-control">
         </div>
-        <div class="col-md-3">
-            <label>Proveedor:</label>
-            <select name="proveedor" class="form-control">
-                <option value="">-- Todos --</option>
-                @foreach($proveedores as $proveedor)
-                    <option value="{{ $proveedor->numero }}" {{ request('proveedor') == $proveedor->codigo ? 'selected' : '' }}>
-                        {{ $proveedor->nombre }}
-                    </option>
-                @endforeach
-            </select>
+            <div class="col-md-3">
+            <label>Número de Cuenta Bancaria:</label>
+            <input type="text" name="numero_cuenta" value="{{ request('numero_cuenta') }}" class="form-control" placeholder="Buscar cuenta bancaria">
         </div>
         <div class="col-md-3">
             <label>Número de factura:</label>
-            <input type="text" name="numero_factura" value="{{ request('numero_factura') }}" class="form-control">
+            <input type="text" name="numero_factura" value="{{ request('numero_factura') }}" class="form-control" placeholder="Buscar factura">
         </div>
         <div class="col-md-12 text-end">
             <button type="submit" class="btn btn-primary mt-2">Filtrar</button>

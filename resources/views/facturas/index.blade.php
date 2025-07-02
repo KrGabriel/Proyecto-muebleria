@@ -24,14 +24,7 @@
         </div>
         <div class="col-md-3">
             <label>Proveedor:</label>
-            <select name="proveedor" class="form-control">
-                <option value="">-- Todos --</option>
-                @foreach($proveedores as $proveedor)
-                    <option value="{{ $proveedor->codigo }}" {{ request('proveedor') == $proveedor->codigo ? 'selected' : '' }}>
-                        {{ $proveedor->nombre }}
-                    </option>
-                @endforeach
-            </select>
+            <input type="text" name="proveedor" value="{{ request('proveedor') }}" class="form-control" placeholder="Buscar proveedor">
         </div>
         <div class="col-md-3">
             <label>Número de Factura:</label>

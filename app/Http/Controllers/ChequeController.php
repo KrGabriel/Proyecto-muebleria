@@ -34,6 +34,12 @@ class ChequeController extends Controller
             });
         }
 
+        if ($request->filled('numero_cuenta')) {
+            $query->whereHas('cuenta', function ($q) use ($request) {
+                $q->where('numero_cuenta', 'like', '%' . $request->numero_cuenta . '%');
+            });
+        }
+
         $cheques = $query->orderBy('fecha', 'desc')->paginate(15);
         $proveedores = Proveedor::orderBy('nombre')->get();
 
