@@ -18,6 +18,7 @@
             <table class="table table-hover mb-0">
                 <thead class="table-light">
                     <tr>
+                        <th>Numero</th>
                         <th>Nombre</th>
                         <th>Dirección</th>
                         <th>Teléfono</th>
@@ -30,6 +31,7 @@
                 <tbody>
                     @forelse ($proveedores as $proveedor)
                         <tr>
+                            <td>{{ $proveedor->numero_proveedor}}
                             <td>{{ $proveedor->nombre }}</td>
                             <td>{{ $proveedor->direccion }}</td>
                             <td>{{ $proveedor->telefono }}</td>

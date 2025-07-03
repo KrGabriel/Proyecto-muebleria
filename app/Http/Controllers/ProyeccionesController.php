@@ -65,6 +65,11 @@ class ProyeccionesController extends Controller
             $query->where('entro', true);
         }
 
+        if ($request->filled('cuenta_id')) {
+            $query->where('cuenta_id', $request->cuenta_id);
+        }
+
+
         $proyecciones = $query->orderBy('fecha', 'asc')->get();
 
         $pdf = Pdf::loadView('proyeccion_cuentas.pdf', compact('proyecciones', 'bancoNombre'));

@@ -55,6 +55,7 @@
     <table>
         <thead>
             <tr>
+                <th>¿Entro?</th>
                 <th>Fecha</th>
                 <th>Concepto</th>
                 <th>Débito</th>
@@ -68,6 +69,7 @@
                     $p_haberes += $p->haber ?? 0;
                 @endphp
                 <tr>
+                    <td>{{ $p->entro ? "Sí" : "NO" }}</td>
                     <td>{{ \Carbon\Carbon::parse($p->fecha)->format('d/m/Y') }}</td>
                     <td>{{ $p->concepto ?? ('Cheque N° ' . $p->numero_cheque) }}</td>
                     <td>${{ number_format($p->debe ?? 0, 2) }}</td>

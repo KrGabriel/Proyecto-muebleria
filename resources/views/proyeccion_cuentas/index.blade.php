@@ -88,6 +88,7 @@
         <table class="table table-hover align-middle">
             <thead class="table-dark">
                 <tr>
+                    <th scope="col">¿Entro?</th>
                     <th scope="col">Fecha</th>
                     <th scope="col">Concepto</th>
                     <th scope="col">Débito</th>
@@ -97,13 +98,14 @@
             <tbody>
                 @forelse ($proyecciones as $cheque)
                     <tr>
+                        <td>{{ $cheque->entro ? "Sí" : "No" }}</td>
                         <td>{{ $cheque->fecha }}</td>
                         <td>Cheque * {{ $cheque->numero_cheque }}</td>
                         <td>${{ number_format($cheque->debe, 2, ',', '.') }}</td>
                         <td>${{ number_format($cheque->haber, 2, ',', '.') }}</td>
                     </tr>
                 @empty
-                    <tr><td colspan="5" class="text-center text-muted">No hay proyecciones cargadas.</td></tr>
+                    <tr><td colspan="6" class="text-center text-muted">No hay proyecciones cargadas.</td></tr>
                 @endforelse
             </tbody>
         </table>
