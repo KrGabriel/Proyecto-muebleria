@@ -64,25 +64,17 @@ $(document).ready(function() {
                         </select>
                         @error('codigo_cuenta') <div class="text-danger">{{ $message }}</div> @enderror
                     </div>
-                    <div class="mb-3 position-relative">
-                        <label class="form-label">Factura:</label>
-                        <input 
-                            type="text" 
-                            name="numero" 
-                            id="numero" 
-                            class="form-control" 
-                            autocomplete="off" 
-                            placeholder="Buscar factura por número o proveedor" 
-                            required
-                            value="{{ $cheque->factura ? $cheque->factura->numero . ' - ' . ($cheque->factura->proveedor->nombre ?? 'Sin proveedor') : '' }}"
-                        >
-                        <input 
-                            type="hidden" 
-                            name="codigo_factura" 
-                            id="codigo_factura" 
-                            value="{{ $cheque->codigo_factura }}"
-                        >
-                        <div id="lista_facturas" class="list-group position-absolute w-100" style="z-index: 1000; max-height: 200px; overflow-y: auto;"></div>
+                    <div class="mb-3">
+                        <label class="form-label">Factura</label>
+                        <select name="codigo_factura" class="form-select" required>
+                            <option value="">Seleccione una factura</option>
+                            @foreach($facturas as $factura)
+                                <option value="{{ $factura->id }}"
+                                    {{ (old('codigo_factura', $cheque->codigo_factura) == $factura->id) ? 'selected' : '' }}>
+                                    Nº {{ $factura->numero }} - {{ $factura->proveedor->nombre ?? '' }}
+                                </option>
+                            @endforeach
+                        </select>
                         @error('codigo_factura') <div class="text-danger">{{ $message }}</div> @enderror
                     </div>
                     <div class="mb-3">

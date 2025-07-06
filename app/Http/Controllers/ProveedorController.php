@@ -23,7 +23,9 @@ class ProveedorController extends Controller
      */
     public function create()
     {
-        return view('proveedores.create');
+        $ultimoNumero = \App\Models\Proveedor::max('numero_proveedor');
+        $siguienteNumero = $ultimoNumero ? $ultimoNumero + 1 : 1; // Si no hay proveedores, empieza desde 1
+        return view('proveedores.create', compact('siguienteNumero'));
     }
 
     /**
@@ -33,6 +35,7 @@ class ProveedorController extends Controller
     {
         //Valida los datos que se ingresan
         $validated = $request->validate([
+            'numero_proveedor' => 'required|string|max:50|unique:proveedores,numero_proveedor',
             'nombre' => 'required|string|max:100',
             'direccion' => 'nullable|string',
             'telefono' => 'nullable|string|max:30',

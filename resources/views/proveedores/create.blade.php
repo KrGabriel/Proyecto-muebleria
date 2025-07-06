@@ -25,7 +25,7 @@
 
         <div class="mb-3">
             <label>Número de Proveedor:</label>
-            <input type="number" name="numero_proveedor" class="form-control" value="{{ old('numero_proveedor') }}" required>
+            <input type="number" name="numero_proveedor" class="form-control" value="{{ old('numero_proveedor', $siguienteNumero) }}" readonly required>
         </div>
 
         <div class="mb-3">

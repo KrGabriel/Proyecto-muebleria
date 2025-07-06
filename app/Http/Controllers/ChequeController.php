@@ -46,11 +46,12 @@ class ChequeController extends Controller
         return view('cheques.index', compact('cheques', 'proveedores'));
     }
 
-    public function create()
+    public function create(Request $request)
     {
         $cuentas = CuentaBancaria::all();
         $facturas = Factura::with('proveedor')->get();
-        return view('cheques.create', compact('cuentas', 'facturas'));
+        $factura_id = $request->input('factura_id'); // Acepta nuevo cheque con autocompletado
+        return view('cheques.create', compact('cuentas', 'facturas', 'factura_id'));
     }
     
     public function store(Request $request)
@@ -72,7 +73,7 @@ class ChequeController extends Controller
     public function edit(Cheque $cheque)
     {
         $cuentas = CuentaBancaria::all();
-        $facturas = Factura::all();
+        $facturas = Factura::with('proveedor')->get();
         return view('cheques.edit', compact('cheque', 'cuentas', 'facturas'));
     }
 
@@ -89,7 +90,7 @@ class ChequeController extends Controller
         ]);
         $cheque->update($validated);
 
-        return redirect()->route('factuas.index')->with('success', 'Cheque actualizado correctamente.');
+        return redirect()->route('facturas.index')->with('success', 'Cheque actualizado correctamente.');
     }
 
     public function destroy(Cheque $cheque)
