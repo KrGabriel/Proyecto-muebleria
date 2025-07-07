@@ -40,6 +40,45 @@ $(document).ready(function() {
         }
     });
 });
+
+$('#numero_factura').on('keyup', function() {
+    let query = $(this).val();
+    if (query.length >= 2) {
+        $.ajax({
+            url: '/buscar-factura',
+            data: { q: query },
+            success: function(data) {
+                let lista = $('#lista_facturas').empty();
+                if (data.length === 0) {
+                    lista.append('<div class="list-group-item disabled">No se encontraron facturas</div>');
+                } else {
+                    data.forEach(function(factura) {
+                        let text = factura.numero + ' - ' + (factura.proveedor_nombre ?? 'Sin proveedor');
+                        lista.append(`<button type="button" class="list-group-item list-group-item-action" data-codigo="${factura.id}" data-numero="${factura.numero}" data-proveedor="${factura.proveedor_nombre}">${text}</button>`);
+                    });
+                }
+                lista.show();
+            }
+        });
+    } else {
+        $('#lista_facturas').hide();
+    }
+});
+
+$('#lista_facturas').on('click', 'button', function() {
+    let numero = $(this).data('numero');
+    let codigo = $(this).data('codigo');
+    let proveedor = $(this).data('proveedor');
+    $('#numero_factura').val(numero + (proveedor ? ' - ' + proveedor : ''));
+    $('#codigo_factura').val(codigo);
+    $('#lista_facturas').hide();
+});
+
+$(document).on('click', function(e) {
+    if (!$(e.target).closest('#numero_factura, #lista_facturas').length) {
+        $('#lista_facturas').hide();
+    }
+});
 </script>
 @endpush
 @section('content')
@@ -63,17 +102,11 @@ $(document).ready(function() {
                         </select>
                         @error('codigo_cuenta') <div class="text-danger">{{ $message }}</div> @enderror
                     </div>
-                    <div class="mb-3">
+                    <div class="mb-3 position-relative">
                         <label class="form-label">Factura</label>
-                        <select name="codigo_factura" class="form-select" required>
-                            <option value="">Seleccione una factura</option>
-                            @foreach($facturas as $factura)
-                                <option value="{{ $factura->id }}"
-                                    {{ (old('codigo_factura', $factura_id ?? null) == $factura->id) ? 'selected' : '' }}>
-                                    Nº {{ $factura->numero }} - {{ $factura->proveedor->nombre ?? '' }}
-                                </option>
-                            @endforeach
-                        </select>
+                        <input type="text" name="numero_factura" id="numero_factura" class="form-control" autocomplete="off" value="{{ old('numero_factura') }}" required>
+                        <input type="hidden" name="codigo_factura" id="codigo_factura" value="{{ old('codigo_factura', $factura_id ?? '') }}">
+                        <div id="lista_facturas" class="list-group position-absolute w-100" style="z-index: 1000;"></div>
                         @error('codigo_factura') <div class="text-danger">{{ $message }}</div> @enderror
                     </div>
                     <div class="mb-3">

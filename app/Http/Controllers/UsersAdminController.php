@@ -21,7 +21,6 @@ class UsersAdminController extends Controller
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:6|confirmed',
         ]);
-        $validated['password'] = Hash::make($validated['password']);
         User::create($validated);
 
         return redirect()->route('usersAdmin.index')->with('success', 'Usuario creado correctamente.');

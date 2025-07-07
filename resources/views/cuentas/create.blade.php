@@ -24,11 +24,6 @@
                         <input type="text" name="numero_cuenta" class="form-control" value="{{ old('numero') }}" required>
                         @error('numero') <div class="text-danger">{{ $message }}</div> @enderror
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">Alias:</label>
-                        <input type="text" name="alias" class="form-control" value="{{ old('alias') }}">
-                        @error('alias') <div class="text-danger">{{ $message }}</div> @enderror
-                    </div>
                     <div class="d-flex justify-content-between">
                         <button type="submit" class="btn btn-success btn-lg">
                             <i class="bi bi-save"></i> Guardar

@@ -23,9 +23,12 @@ class FacturaController extends Controller
         if ($request->filled('fecha_hasta')) {
             $query->where('fecha', '<=', $request->fecha_hasta);
         }
+
         if ($request->filled('proveedor')) {
-            $query->where('codigo_proveedor', $request->proveedor);
-        }
+            $query->whereHas('proveedor', function ($q) use ($request) {
+                $q->where('nombre', 'ilike', '%' . $request->proveedor . '%');
+            });
+}
         if ($request->filled('numero_factura')) {
             $query->where('numero', 'like', '%' . $request->numero_factura . '%');
         }
@@ -107,6 +110,7 @@ class FacturaController extends Controller
     public function destroy(string $id)
     {
         $factura = Factura::findOrFail($id);
+        $factura->cheques()->delete();
         $factura->delete();
 
         return redirect()->route('facturas.index')
