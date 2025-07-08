@@ -11,14 +11,19 @@ class ProyeccionesController extends Controller
 {
     public function index(Request $request)
     {
-        $bancos = Banco::orderBy('nombre')->get();
-
+        $bancos = Banco::with('cuentas')->orderBy('nombre')->get();
         $query = Cheque::query();
 
         if ($request->filled('banco')) {
             $bancoFiltro = $request->banco;
             $query->whereHas('cuenta.banco', function ($q) use ($bancoFiltro) {
                 $q->where('nombre', $bancoFiltro);
+            });
+        }
+
+        if ($request->filled('cuenta')) {
+            $query->whereHas('cuenta', function ($q) use ($request) {
+                $q->where('codigo', $request->cuenta);
             });
         }
 
@@ -36,10 +41,12 @@ class ProyeccionesController extends Controller
 
         $proyecciones = $query->orderBy('fecha', 'asc')->paginate(10)->appends($request->query());
 
-        return view('proyeccion_cuentas.index', compact('proyecciones', 'bancos'));
+        return view('proyeccion_cuentas.index', [
+            'proyecciones' => $proyecciones,
+            'bancos' => $bancos,
+        ]);
     }
 
-    
     public function exportarPDF(Request $request)
     {
         $query = Cheque::query();
@@ -50,6 +57,12 @@ class ProyeccionesController extends Controller
             $bancoNombre = $bancoFiltro;
             $query->whereHas('cuenta.banco', function ($q) use ($bancoFiltro) {
                 $q->where('nombre', $bancoFiltro);
+            });
+        }
+
+        if ($request->filled('cuenta')) {
+            $query->whereHas('cuenta', function ($q) use ($request) {
+                $q->where('codigo', $request->cuenta);
             });
         }
 
@@ -73,13 +86,11 @@ class ProyeccionesController extends Controller
         $proyecciones = $query->orderBy('fecha', 'asc')->get();
 
         $pdf = Pdf::loadView('proyeccion_cuentas.pdf', compact('proyecciones', 'bancoNombre'));
-        
-        if($bancoNombre == null)
-        {
+
+        if ($bancoNombre === null) {
             $bancoNombre = 'Todos';
         }
 
         return $pdf->download('proyecciones_filtradas-' . $bancoNombre . '.pdf');
     }
-
 }

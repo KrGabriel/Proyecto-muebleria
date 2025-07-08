@@ -60,7 +60,7 @@
 
                 <div class="mb-3">
                     <label class="form-label">Banco</label>
-                    <select name="banco" class="form-select">
+                    <select name="banco" id="bancoSelect" class="form-select">
                         <option value="">Todos</option>
                         @foreach ($bancos as $banco)
                             <option value="{{ $banco->nombre }}" {{ request('banco') === $banco->nombre ? 'selected' : '' }}>
@@ -69,6 +69,22 @@
                         @endforeach
                     </select>
                 </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Cuenta</label>
+                    <select name="cuenta" id="cuentaSelect" class="form-select">
+                        <option value="">Todas</option>
+                        @foreach ($bancos as $banco)
+                            @foreach ($banco->cuentas as $cuenta)
+                                <option value="{{ $cuenta->codigo }}" data-banco="{{ $banco->nombre }}"
+                                    {{ request('cuenta') == $cuenta->codigo ? 'selected' : '' }}>
+                                    {{ $cuenta->numero_cuenta }}
+                                </option>
+                            @endforeach
+                        @endforeach
+                    </select>
+                </div>
+
 
                 <div class="mb-3">
                     <label class="form-label">¿Solo si?</label>
@@ -130,9 +146,10 @@
 
 
     <form action="{{ url('/proyecciones/exportar-pdf') }}" method="GET" target="_blank" class="mt-3">
-        <input type="hidden" name="banco" value="{{ $bancoFiltro }}">
-        <input type="hidden" name="desde" value="{{ $desde }}">
-        <input type="hidden" name="hasta" value="{{ $hasta }}">
+        <input type="hidden" name="banco" value="{{ request('banco') }}">
+        <input type="hidden" name="cuenta" value="{{ request('cuenta') }}">
+        <input type="hidden" name="desde" value="{{ request('desde') }}">
+        <input type="hidden" name="hasta" value="{{ request('hasta') }}">
         @if(request('solo_si'))
             <input type="hidden" name="solo_si" value="1">
         @endif
@@ -143,3 +160,31 @@
     </form>
 </div>
 @endsection
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const bancoSelect = document.getElementById('bancoSelect');
+        const cuentaSelect = document.getElementById('cuentaSelect');
+
+        function filtrarCuentas() {
+            const bancoSeleccionado = bancoSelect.value;
+            [...cuentaSelect.options].forEach(opt => {
+                if (!opt.value) {
+                    opt.hidden = false;
+                    return;
+                }
+                opt.hidden = opt.getAttribute('data-banco') !== bancoSeleccionado;
+            });
+
+            // Si la cuenta seleccionada no corresponde al banco, reset
+            if (cuentaSelect.selectedOptions[0] &&
+                cuentaSelect.selectedOptions[0].getAttribute('data-banco') !== bancoSeleccionado) {
+                cuentaSelect.value = '';
+            }
+        }
+
+        bancoSelect.addEventListener('change', filtrarCuentas);
+        filtrarCuentas(); // Ejecutar en carga inicial
+    });
+</script>

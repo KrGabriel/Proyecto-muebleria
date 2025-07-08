@@ -77,8 +77,10 @@ class FacturaController extends Controller
         ]);
         $factura = Factura::create($validated);
 
-        return redirect()->route('cheques.create', ['factura_id' => $factura->id])
-            ->with('success', 'Factura creada. Ahora agregue los cheques.');
+        return redirect()->route('cheques.create', [
+            'proveedor' => $factura->codigo_proveedor,
+            'factura_id' => $factura->id
+        ])->with('success', 'Factura creada. Ahora agregue los cheques.');
     }
 
     public function edit($id)

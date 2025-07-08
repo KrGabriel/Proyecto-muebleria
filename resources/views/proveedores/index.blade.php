@@ -9,10 +9,22 @@
         </a>
     </div>
 
+    {{-- Formulario de búsqueda --}}
+    <form method="GET" action="{{ route('proveedores.index') }}" class="mb-3">
+        <div class="input-group">
+            <input type="text" name="q" class="form-control" placeholder="Buscar por nombre, dirección, teléfono, etc." value="{{ old('q', $query ?? '') }}">
+            <button type="submit" class="btn btn-outline-secondary">Buscar</button>
+            @if(!empty($query))
+                <a href="{{ route('proveedores.index') }}" class="btn btn-outline-danger">Limpiar</a>
+            @endif
+        </div>
+    </form>
+
     @if (session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
+    {{-- Tabla de proveedores --}}
     <div class="card shadow">
         <div class="card-body p-0">
             <table class="table table-hover mb-0">
@@ -62,21 +74,23 @@
             </table>
         </div>
     </div>
-</div>
-@php
-    $currentPage = $proveedores->currentPage();
-    $lastPage = $proveedores->lastPage();
-@endphp
 
-<nav>
-    <ul class="pagination justify-content-center mt-4">
-        @for ($i = 1; $i <= $lastPage; $i++)
-            <li class="page-item {{ $i == $currentPage ? 'active' : '' }}">
-                <a class="page-link" href="{{ $proveedores->url($i) }}">
-                    {{ $i }}
-                </a>
-            </li>
-        @endfor
-    </ul>
-</nav>
+    {{-- Paginación --}}
+    @php
+        $currentPage = $proveedores->currentPage();
+        $lastPage = $proveedores->lastPage();
+    @endphp
+
+    <nav>
+        <ul class="pagination justify-content-center mt-4">
+            @for ($i = 1; $i <= $lastPage; $i++)
+                <li class="page-item {{ $i == $currentPage ? 'active' : '' }}">
+                    <a class="page-link" href="{{ $proveedores->url($i) }}&q={{ urlencode($query ?? '') }}">
+                        {{ $i }}
+                    </a>
+                </li>
+            @endfor
+        </ul>
+    </nav>
+</div>
 @endsection

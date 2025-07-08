@@ -50,9 +50,25 @@ class ChequeController extends Controller
     {
         $cuentas = CuentaBancaria::all();
         $facturas = Factura::with('proveedor')->get();
+<<<<<<< Updated upstream
         $factura_id = $request->input('factura_id'); // Acepta nuevo cheque con autocompletado
         return view('cheques.create', compact('cuentas', 'facturas', 'factura_id'));
+=======
+
+        $proveedorSeleccionado = $request->input('proveedor');
+        $facturaSeleccionadaId = $request->input('factura_id');
+        $cuentaSeleccionada = $request->input('cuenta');
+
+        return view('cheques.create', compact(
+            'cuentas',
+            'facturas',
+            'proveedorSeleccionado',
+            'cuentaSeleccionada',
+            'facturaSeleccionadaId'
+        ));
+>>>>>>> Stashed changes
     }
+
     
     public function store(Request $request)
     {
@@ -63,11 +79,25 @@ class ChequeController extends Controller
             'fecha' => 'required|date',
             'debe' => 'required|numeric|min:0',
             'haber' => 'required|numeric|min:0',
-            'codigo_factura' => 'required|exists:facturas,id',  // obligatorio
+            'codigo_factura' => 'required|exists:facturas,id',
         ]);
 
+<<<<<<< Updated upstream
         Cheque::create($validated);
         return redirect()->route('facturas.index')->with('success', 'Cheque creado correctamente.');
+=======
+        $cheque = Cheque::create($validated);
+
+        if ($request->input('continuar') == '1') {
+            return redirect()->route('cheques.create', [
+                'proveedor' => optional($cheque->factura)->codigo_proveedor,
+                'cuenta' => $cheque->codigo_cuenta,
+                'factura_id' => $cheque->codigo_factura,
+            ])->with('success', 'Cheque guardado. Ahora podés cargar otro.');
+        }
+
+        return redirect()->route('cheques.index')->with('success', 'Cheque creado correctamente.');
+>>>>>>> Stashed changes
     }
 
     public function edit(Cheque $cheque)

@@ -103,10 +103,19 @@ $(document).on('click', function(e) {
                         @error('codigo_cuenta') <div class="text-danger">{{ $message }}</div> @enderror
                     </div>
                     <div class="mb-3 position-relative">
+<<<<<<< Updated upstream
                         <label class="form-label">Factura</label>
                         <input type="text" name="numero_factura" id="numero_factura" class="form-control" autocomplete="off" value="{{ old('numero_factura') }}" required>
                         <input type="hidden" name="codigo_factura" id="codigo_factura" value="{{ old('codigo_factura', $factura_id ?? '') }}">
                         <div id="lista_facturas" class="list-group position-absolute w-100" style="z-index: 1000;"></div>
+=======
+                        <label class="form-label pt-3">Factura:</label>
+                        <input type="text" name="numero" id="numero" class="form-control" autocomplete="off"
+                            placeholder="Buscar factura por número o proveedor" required
+                            value="{{ old('numero') ?? (isset($facturaSeleccionadaId) ? optional($facturas->firstWhere('id', $facturaSeleccionadaId))->numero . ' - ' . optional($facturas->firstWhere('id', $facturaSeleccionadaId))->proveedor->nombre : '') }}">
+                        <input type="hidden" name="codigo_factura" id="codigo_factura" value="{{ old('codigo_factura', $facturaSeleccionadaId) }}">
+                        <div id="lista_facturas" class="list-group position-absolute w-100" style="z-index: 1000; max-height: 200px; overflow-y: auto;"></div>
+>>>>>>> Stashed changes
                         @error('codigo_factura') <div class="text-danger">{{ $message }}</div> @enderror
                     </div>
                     <div class="mb-3">
@@ -137,8 +146,11 @@ $(document).on('click', function(e) {
                         @error('entro') <div class="text-danger">{{ $message }}</div> @enderror
                     </div>
                     <div class="d-flex justify-content-between">
-                        <button type="submit" class="btn btn-success btn-lg">
+                        <button type="submit" name="continuar" value="0" class="btn btn-success btn-lg">
                             <i class="bi bi-save"></i> Guardar
+                        </button>
+                        <button type="submit" name="continuar" value="1" class="btn btn-primary btn-lg">
+                            <i class="bi bi-plus-circle"></i> Guardar y crear otro
                         </button>
                         <a href="{{ route('cheques.index') }}" class="btn btn-secondary btn-lg">
                             <i class="bi bi-arrow-left"></i> Volver

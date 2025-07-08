@@ -12,11 +12,28 @@ class ProveedorController extends Controller
     /**
      * Muestra una lista de proveedores
      */
-    public function index()
+    public function index(Request $request)
     {
-        $proveedores = Proveedor::where('activo', true)->orderBy('nombre')->paginate(15); // o la cantidad que se te cante el culo
-        return view('proveedores.index', compact('proveedores'));
+        $query = $request->input('q');
+
+        $proveedores = Proveedor::where('activo', true)
+            ->when($query, function ($qBuilder) use ($query) {
+                $qBuilder->where(function ($q) use ($query) {
+                    $q->where('nombre', 'ILIKE', "%{$query}%")
+                        ->orWhere('direccion', 'ILIKE', "%{$query}%")
+                        ->orWhere('telefono', 'ILIKE', "%{$query}%")
+                        ->orWhere('localidad', 'ILIKE', "%{$query}%")
+                        ->orWhere('provincia', 'ILIKE', "%{$query}%");
+                });
+            })
+            ->orderBy('nombre')
+            ->paginate(15)
+            ->appends(['q' => $query]);
+
+        return view('proveedores.index', compact('proveedores', 'query'));
     }
+
+
 
     /**
      * Muestra un formulario para crear un nuevo proveedor
