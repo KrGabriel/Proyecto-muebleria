@@ -41,6 +41,7 @@
             <table class="table table-hover mb-0">
                 <thead class="table-light">
                     <tr>
+                        <th>¿Entro?</th>
                         <th>Cuenta</th>
                         <th>Factura</th>
                         <th>Número Cheque</th>
@@ -53,6 +54,13 @@
                 <tbody>
                     @forelse ($cheques as $cheque)
                         <tr>
+                            <td>
+                                @if($cheque->entro)
+                                    <span class="badge bg-success">Sí</span>
+                                @else
+                                    <span class="badge bg-secondary">No</span>
+                                @endif
+                            </td>
                             <td>{{ $cheque->cuenta ? $cheque->cuenta->numero_cuenta : '-' }}</td>
                             <td>{{ $cheque->factura ? $cheque->factura->numero : '-' }}</td>
                             <td>{{ $cheque->numero_cheque }}</td>
