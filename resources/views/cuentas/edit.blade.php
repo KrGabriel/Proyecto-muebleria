@@ -22,7 +22,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Número de Cuenta:</label>
-                        <input type="text" name="numero_cuenta" class="form-control" value="{{ old('numero_cuenta', $cuenta->numero_cuenta) }}" required maxlength="9" pattern="\d{1,9}" title="Hasta 9 dígitos numéricos">
+                        <input type="text" name="numero_cuenta" class="form-control" value="{{ old('numero_cuenta', $cuenta->numero_cuenta) }}" required maxlength="9" pattern="^[0-9\-\/_\.,:;]{1,9}$" title="Hasta 9 dígitos numéricos">
                         @error('numero_cuenta') <div class="text-danger">{{ $message }}</div> @enderror
                     </div>
                     <div class="d-flex justify-content-between">
