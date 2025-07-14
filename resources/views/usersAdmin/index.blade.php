@@ -15,6 +15,14 @@
     @if(session('error'))
         <div class="alert alert-danger">{{ session('error') }}</div>
     @endif
+    @if ($errors->any())
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var crearUsuarioModal = new bootstrap.Modal(document.getElementById('crearUsuarioModal'));
+            crearUsuarioModal.show();
+        });
+    </script>
+    @endif
 
     <div class="card shadow">
         <div class="card-body p-0">

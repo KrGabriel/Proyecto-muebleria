@@ -119,12 +119,12 @@ $(document).on('click', function(e) {
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Debe:</label>
-                            <input type="number" name="debe" class="form-control" value="{{ old('debe') }}" min="0" step="0.01" required>
+                            <input type="number" name="debe" class="form-control" value="{{ old('debe', 0) }}" min="0" step="0.01" required onfocus="if(this.value==0)this.value='';" onblur="if(this.value=='')this.value=0;">
                             @error('debe') <div class="text-danger">{{ $message }}</div> @enderror
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Haber:</label>
-                            <input type="number" name="haber" class="form-control" value="{{ old('haber') }}" min="0" step="0.01" required>
+                            <input type="number" name="haber" class="form-control" value="{{ old('haber', 0) }}" min="0" step="0.01" required onfocus="if(this.value==0)this.value='';" onblur="if(this.value=='')this.value=0;">
                             @error('haber') <div class="text-danger">{{ $message }}</div> @enderror
                         </div>
                     </div>
