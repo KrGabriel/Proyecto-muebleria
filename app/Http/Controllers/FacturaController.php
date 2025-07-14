@@ -77,6 +77,13 @@ class FacturaController extends Controller
         ]);
         $factura = Factura::create($validated);
 
+        // Actualizar la fecha de última compra del proveedor
+        $proveedor = \App\Models\Proveedor::where('codigo', $factura->codigo_proveedor)->first();
+        if ($proveedor) {
+            $proveedor->fecha_ultima_compra = $factura->fecha;
+            $proveedor->save();
+        }
+
         return redirect()->route('cheques.create', [
             'proveedor' => $factura->codigo_proveedor,
             'factura_id' => $factura->id
@@ -100,7 +107,33 @@ class FacturaController extends Controller
         ]);
 
         $factura = Factura::findOrFail($id);
+        $proveedorAnterior = $factura->codigo_proveedor;
         $factura->update($request->all());
+
+        // Si cambió el proveedor, actualiza ambos
+        if ($proveedorAnterior != $factura->codigo_proveedor) {
+            // Actualiza el proveedor nuevo
+            $proveedorNuevo = \App\Models\Proveedor::where('codigo', $factura->codigo_proveedor)->first();
+            if ($proveedorNuevo) {
+                $proveedorNuevo->fecha_ultima_compra = $factura->fecha;
+                $proveedorNuevo->save();
+            }
+            // Opcional: recalcula la última compra del proveedor anterior
+            $ultimaFactura = \App\Models\Factura::where('codigo_proveedor', $proveedorAnterior)
+                ->orderBy('fecha', 'desc')->first();
+            $proveedorAnt = \App\Models\Proveedor::where('codigo', $proveedorAnterior)->first();
+            if ($proveedorAnt) {
+                $proveedorAnt->fecha_ultima_compra = $ultimaFactura ? $ultimaFactura->fecha : null;
+                $proveedorAnt->save();
+            }
+        } else {
+            // Si no cambió, solo actualiza la fecha de última compra
+            $proveedor = \App\Models\Proveedor::where('codigo', $factura->codigo_proveedor)->first();
+            if ($proveedor) {
+                $proveedor->fecha_ultima_compra = $factura->fecha;
+                $proveedor->save();
+            }
+        }
 
         return redirect()->route('facturas.index')
             ->with('success', 'Factura actualizada de manera exitosa.');

@@ -80,8 +80,10 @@
                                 <table class="table table-sm table-hover mb-0">
                                     <thead class="table-light">
                                         <tr>
+                                            <th>¿Entró?</th>
                                             <th>Número</th>
                                             <th>Banco</th>
+                                            <th>Cuenta</th>
                                             <th>Fecha de Pago</th>
                                             <th>Importe</th>
                                             <th>Acciones</th>
@@ -90,12 +92,19 @@
                                     <tbody>
                                     @foreach ($factura->cheques as $cheque)
                                         <tr>
+                                            <td>
+                                                @if($cheque->entro)
+                                                    <span class="badge bg-success">Sí</span>
+                                                @else
+                                                    <span class="badge bg-danger">No</span>
+                                                @endif
+                                            </td>
                                             <td>{{ $cheque->numero_cheque }}</td>
 
                                             <td>
                                                 {{ $cheque->cuenta->banco->nombre ?? 'Sin Banco' }}
                                             </td>
-
+                                            <td>{{ $cheque->cuenta->numero_cuenta ?? 'Sin Cuenta' }}</td>
                                             <td>{{ $cheque->fecha }}</td>
 
                                             <td>${{ number_format($cheque->debe, 2, ',', '.') }}</td>
