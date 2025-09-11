@@ -42,6 +42,7 @@
     </div>
 
     <div class="modal fade" id="filtroModal" tabindex="-1" aria-labelledby="filtroModalLabel" aria-hidden="true">
+        {{-- ... El contenido de tu modal de filtros no necesita cambios ... --}}
         <div class="modal-dialog">
             <form method="GET" class="modal-content">
             <div class="modal-header">
@@ -107,44 +108,65 @@
                     <th scope="col">¿Entro?</th>
                     <th scope="col">Fecha</th>
                     <th scope="col">Concepto</th>
-                    <th scope="col">Débito</th>
-                    <th scope="col">Haber</th>
+                    <th scope="col" class="text-end">Débito</th>
+                    <th scope="col" class="text-end">Haber</th>
                 </tr>
             </thead>
             <tbody>
                 @forelse ($proyecciones as $cheque)
                     <tr>
                         <td>{{ $cheque->entro ? "Sí" : "No" }}</td>
-                        <td>{{ $cheque->fecha }}</td>
-                        <td>Cheque * {{ $cheque->numero_cheque }}</td>
-                        <td>${{ number_format($cheque->debe, 2, ',', '.') }}</td>
-                        <td>${{ number_format($cheque->haber, 2, ',', '.') }}</td>
+                        <td>{{ $cheque->fecha->format('d/m/Y') }}</td>
+                        
+                        <!-- CAMBIO AQUÍ: Se añade el NÚMERO y nombre del proveedor al concepto -->
+                        <td>
+                            Cheque * {{ $cheque->numero_cheque }}
+                            <br>
+                            <small class="text-muted">
+                                @php
+                                    // Asignamos el proveedor a una variable para que el código sea más limpio y legible
+                                    $proveedor = optional($cheque->factura)->proveedor;
+                                @endphp
+                                @if ($proveedor)
+                                    Nº {{ $proveedor->codigo }} - {{ $proveedor->nombre }}
+                                @else
+                                    Sin Proveedor
+                                @endif
+                            </small>
+                        </td>
+
+                        <td class="text-end">${{ number_format($cheque->debe, 2, ',', '.') }}</td>
+                        <td class="text-end">${{ number_format($cheque->haber, 2, ',', '.') }}</td>
                     </tr>
                 @empty
-                    <tr><td colspan="6" class="text-center text-muted">No hay proyecciones cargadas.</td></tr>
+                    <tr><td colspan="5" class="text-center text-muted">No hay proyecciones que coincidan con los filtros.</td></tr>
                 @endforelse
             </tbody>
+            
+            <tfoot class="table-group-divider fw-bold">
+                <tr>
+                    <td colspan="3" class="text-end">TOTALES:</td>
+                    <td class="text-end">${{ number_format($totalDebe, 2, ',', '.') }}</td>
+                    <td class="text-end">${{ number_format($totalHaber, 2, ',', '.') }}</td>
+                </tr>
+                <tr class="table-light">
+                    <td colspan="3" class="text-end">NETO TOTAL (Débito - Haber):</td>
+                    <td colspan="2" class="text-center fs-5">${{ number_format($totalNeto, 2, ',', '.') }}</td>
+                </tr>
+            </tfoot>
+
         </table>
     </div>
 
-    @php
-        $currentPage = $proyecciones->currentPage();
-        $lastPage = $proyecciones->lastPage();
-    @endphp
-
+    @if ($proyecciones->hasPages())
     <nav>
         <ul class="pagination justify-content-center mt-4">
-            @for ($i = 1; $i <= $lastPage; $i++)
-                <li class="page-item {{ $i == $currentPage ? 'active' : '' }}">
-                    <a class="page-link" href="{{ $proyecciones->url($i) }}">
-                        {{ $i }}
-                    </a>
-                </li>
-            @endfor
+            {{ $proyecciones->links() }}
         </ul>
     </nav>
+    @endif
 
-
+    {{-- El formulario de exportación no se toca --}}
     <form action="{{ url('/proyecciones/exportar-pdf') }}" method="GET" target="_blank" class="mt-3">
         <input type="hidden" name="banco" value="{{ request('banco') }}">
         <input type="hidden" name="cuenta" value="{{ request('cuenta') }}">
@@ -155,36 +177,41 @@
         @endif
 
         <button type="submit" class="btn btn-outline-dark">
-            🖨️ Imprimir cheques filtrados
+            Imprimir cheques filtrados
         </button>
     </form>
 </div>
-@endsection
-
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         const bancoSelect = document.getElementById('bancoSelect');
         const cuentaSelect = document.getElementById('cuentaSelect');
+        const cuentaOptions = Array.from(cuentaSelect.options);
 
         function filtrarCuentas() {
             const bancoSeleccionado = bancoSelect.value;
-            [...cuentaSelect.options].forEach(opt => {
-                if (!opt.value) {
-                    opt.hidden = false;
-                    return;
+            let currentCuentaValue = cuentaSelect.value;
+
+            cuentaSelect.innerHTML = '';
+            
+            cuentaSelect.appendChild(cuentaOptions.find(opt => opt.value === ''));
+
+            cuentaOptions.forEach(opt => {
+                if (opt.value && (bancoSeleccionado === '' || opt.dataset.banco === bancoSeleccionado)) {
+                    cuentaSelect.appendChild(opt);
                 }
-                opt.hidden = opt.getAttribute('data-banco') !== bancoSeleccionado;
             });
 
-            // Si la cuenta seleccionada no corresponde al banco, reset
-            if (cuentaSelect.selectedOptions[0] &&
-                cuentaSelect.selectedOptions[0].getAttribute('data-banco') !== bancoSeleccionado) {
+            if (cuentaSelect.querySelector(`option[value="${currentCuentaValue}"]`)) {
+                cuentaSelect.value = currentCuentaValue;
+            } else {
                 cuentaSelect.value = '';
             }
         }
 
         bancoSelect.addEventListener('change', filtrarCuentas);
-        filtrarCuentas(); // Ejecutar en carga inicial
+        
+        filtrarCuentas(); 
     });
 </script>
+@endsection

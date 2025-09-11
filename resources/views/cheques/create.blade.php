@@ -91,6 +91,7 @@ $(document).on('click', function(e) {
             <div class="card-body">
                 <form action="{{ route('cheques.store') }}" method="POST">
                     @csrf
+                    {{-- ... otros campos del formulario ... --}}
                     <div class="mb-3">
                         <label class="form-label">Cuenta Bancaria:</label>
                         <select name="codigo_cuenta" class="form-select" required>
@@ -124,20 +125,28 @@ $(document).on('click', function(e) {
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Haber:</label>
-                            <input type="number" name="haber" class="form-control" value="{{ old('haber', 0) }}" min="0" step="0.01" required onfocus="if(this.value==0)this.value='';" onblur="if(this.value=='')this.value=0;">
+                            <input type="number" name="haber" class="form-control" value="{{ old('haber', 0) }}" min="0" step="0.01" required onfocus="if(this.value=='')this.value=0;">
                             @error('haber') <div class="text-danger">{{ $message }}</div> @enderror
                         </div>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Fecha:</label>
-                        <input type="date" name="fecha" class="form-control" value="{{ old('fecha') }}" required>
+                        <label class="form-label">Fecha de Emisión:</label>
+                        <input type="date" name="fecha" class="form-control" value="{{ old('fecha', date('Y-m-d')) }}" required>
                         @error('fecha') <div class="text-danger">{{ $message }}</div> @enderror
                     </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Fecha de Entrada (Opcional):</label>
+                        <input type="date" name="fecha_entrada" class="form-control" value="{{ old('fecha_entrada') }}">
+                        @error('fecha_entrada') <div class="text-danger">{{ $message }}</div> @enderror
+                    </div>
+
                     <div class="mb-3 form-check">
                         <input type="checkbox" name="entro" class="form-check-input" value="1" {{ old('entro') ? 'checked' : '' }}>
                         <label class="form-check-label">¿Entró?</label>
                         @error('entro') <div class="text-danger">{{ $message }}</div> @enderror
                     </div>
+                    
                     <div class="d-flex justify-content-between">
                         <button type="submit" name="continuar" value="0" class="btn btn-success btn-lg">
                             <i class="bi bi-save"></i> Guardar

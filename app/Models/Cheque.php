@@ -16,12 +16,19 @@ class Cheque extends Model
 
     protected $fillable = [
         'entro',
+        'fecha_entrada',
         'codigo_cuenta',
         'numero_cheque',
         'fecha',
         'debe',
         'haber',
         'codigo_factura',
+    ];
+
+    protected $casts = [
+        'entro' => 'boolean',
+        'fecha' => 'date',
+        'fecha_entrada' => 'date',
     ];
 
     public function cuenta()
@@ -31,6 +38,6 @@ class Cheque extends Model
 
     public function factura()
     {
-        return $this->belongsTo(Factura::class, 'codigo_factura');
+        return $this->belongsTo(Factura::class, 'codigo_factura', 'id');
     }
 }

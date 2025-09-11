@@ -69,13 +69,16 @@ class ChequeController extends Controller
     {
         $validated = $request->validate([
             'entro' => 'nullable|boolean',
+            'fecha_entrada' => 'nullable|date',
             'codigo_cuenta' => 'required|exists:cuentas,codigo',
-            'numero_cheque' => 'required|string|max:50|unique:cheques,numero_cheque',
+            'numero_cheque' => 'required|string|max:50', 
             'fecha' => 'required|date',
             'debe' => 'required|numeric|min:0',
             'haber' => 'required|numeric|min:0',
             'codigo_factura' => 'required|exists:facturas,id',
         ]);
+
+        $validated['entro'] = $request->has('entro');
 
         $cheque = Cheque::create($validated);
 
@@ -101,16 +104,20 @@ class ChequeController extends Controller
     {
         $validated = $request->validate([
             'entro' => 'nullable|boolean',
-            'codigo_cuenta' => 'required|exists:cuentas,codigo', // corregido
-            'numero_cheque' => 'required|string|max:50|unique:cheques,numero_cheque,' . $cheque->id . ',id',
+            'fecha_entrada' => 'nullable|date',
+            'codigo_cuenta' => 'required|exists:cuentas,codigo',
+            'numero_cheque' => 'required|string|max:50',
             'fecha' => 'required|date',
             'debe' => 'required|numeric|min:0',
             'haber' => 'required|numeric|min:0',
-            'codigo_factura' => 'required|exists:facturas,id', // obligatorio
+            'codigo_factura' => 'required|exists:facturas,id',
         ]);
+        
+        $validated['entro'] = $request->has('entro');
+
         $cheque->update($validated);
 
-        return redirect()->route('facturas.index')->with('success', 'Cheque actualizado correctamente.');
+        return redirect()->route('cheques.index')->with('success', 'Cheque actualizado correctamente.');
     }
 
     public function destroy(Cheque $cheque)

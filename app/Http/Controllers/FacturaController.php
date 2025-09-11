@@ -77,14 +77,13 @@ class FacturaController extends Controller
         ]);
         $factura = Factura::create($validated);
 
-        // Actualizar la fecha de última compra del proveedor
         $proveedor = \App\Models\Proveedor::where('codigo', $factura->codigo_proveedor)->first();
         if ($proveedor) {
             $proveedor->fecha_ultima_compra = $factura->fecha;
             $proveedor->save();
         }
 
-        return redirect()->route('cheques.create', [
+        return redirect()->route('facturas.index', [
             'proveedor' => $factura->codigo_proveedor,
             'factura_id' => $factura->id
         ])->with('success', 'Factura creada. Ahora agregue los cheques.');

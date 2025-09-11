@@ -12,7 +12,6 @@
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
-    <!-- Form para filtros de cheques -->
      <form method="GET" action="{{ route('cheques.index') }}" class="row g-3 mb-4">
         <div class="col-md-3">
             <label>Desde:</label>
@@ -38,7 +37,7 @@
     
     <div class="card shadow">
         <div class="card-body p-0">
-            <table class="table table-hover mb-0">
+            <table class="table table-hover mb-0 align-middle">
                 <thead class="table-light">
                     <tr>
                         <th>¿Entro?</th>
@@ -47,7 +46,9 @@
                         <th>Número Cheque</th>
                         <th>Debe</th>
                         <th>Haber</th>
-                        <th>Fecha</th>
+                        <!-- CAMBIO 1: Se renombró "Fecha" y se añadió "Fecha Entrada" -->
+                        <th>Fecha Emisión</th>
+                        <th>Fecha Entrada</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -64,9 +65,21 @@
                             <td>{{ $cheque->cuenta ? $cheque->cuenta->numero_cuenta : '-' }}</td>
                             <td>{{ $cheque->factura ? $cheque->factura->numero : '-' }}</td>
                             <td>{{ $cheque->numero_cheque }}</td>
-                            <td>{{ $cheque->debe }}</td>
-                            <td>{{ $cheque->haber }}</td>
-                            <td>{{ $cheque->fecha }}</td>
+                            <td>${{ number_format($cheque->debe, 2, ',', '.') }}</td>
+                            <td>${{ number_format($cheque->haber, 2, ',', '.') }}</td>
+
+                            <!-- CAMBIO 2: Se formateó la fecha para quitar la hora -->
+                            <td>{{ $cheque->fecha->format('d/m/Y') }}</td>
+                            
+                            <!-- CAMBIO 3: Se añadió la fecha de entrada, con manejo de nulos -->
+                            <td>
+                                @if($cheque->fecha_entrada)
+                                    {{ $cheque->fecha_entrada->format('d/m/Y') }}
+                                @else
+                                    <span class="text-muted">-</span>
+                                @endif
+                            </td>
+
                             <td>
                                 <a href="{{ route('cheques.edit', $cheque->id) }}" class="btn btn-warning btn-sm" title="Editar">
                                     <i class="bi bi-pencil-square"></i>
@@ -82,7 +95,8 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="text-center">No hay cheques cargados.</td>
+                            <!-- CAMBIO 4: Se actualizó el colspan para coincidir con el número de columnas -->
+                            <td colspan="9" class="text-center">No hay cheques cargados.</td>
                         </tr>
                     @endforelse
                 </tbody>
@@ -90,20 +104,14 @@
         </div>
     </div>
 </div>
-@php
-    $currentPage = $cheques->currentPage();
-    $lastPage = $cheques->lastPage();
-@endphp
 
-<nav>
-    <ul class="pagination justify-content-center mt-4">
-        @for ($i = 1; $i <= $lastPage; $i++)
-            <li class="page-item {{ $i == $currentPage ? 'active' : '' }}">
-                <a class="page-link" href="{{ $cheques->url($i) }}">
-                    {{ $i }}
-                </a>
-            </li>
-        @endfor
+{{-- La paginación se puede simplificar usando el método links() --}}
+@if ($cheques->hasPages())
+<nav class="mt-4">
+    <ul class="pagination justify-content-center">
+        {{ $cheques->links() }}
     </ul>
 </nav>
+@endif
+
 @endsection

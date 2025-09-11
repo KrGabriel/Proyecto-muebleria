@@ -1,4 +1,5 @@
 @extends('layouts.app')
+
 @push('scripts')
 <script>
 $(document).ready(function() {
@@ -42,6 +43,7 @@ $(document).ready(function() {
 });
 </script>
 @endpush
+
 @section('content')
 <div class="row justify-content-center">
     <div class="col-md-8">
@@ -53,6 +55,7 @@ $(document).ready(function() {
                 <form action="{{ route('cheques.update', $cheque->id) }}" method="POST">
                     @csrf
                     @method('PUT')
+                    
                     <div class="mb-3">
                         <label class="form-label">Cuenta Bancaria:</label>
                         <select name="codigo_cuenta" class="form-select" required>
@@ -94,16 +97,25 @@ $(document).ready(function() {
                             @error('haber') <div class="text-danger">{{ $message }}</div> @enderror
                         </div>
                     </div>
+                    
                     <div class="mb-3">
-                        <label class="form-label">Fecha:</label>
-                        <input type="date" name="fecha" class="form-control" value="{{ old('fecha', $cheque->fecha) }}" required>
+                        <label class="form-label">Fecha de Emisión:</label>
+                        <input type="date" name="fecha" class="form-control" value="{{ old('fecha', optional($cheque->fecha)->format('Y-m-d')) }}" required>
                         @error('fecha') <div class="text-danger">{{ $message }}</div> @enderror
                     </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Fecha de Entrada (Opcional):</label>
+                        <input type="date" name="fecha_entrada" class="form-control" value="{{ old('fecha_entrada', optional($cheque->fecha_entrada)->format('Y-m-d')) }}">
+                        @error('fecha_entrada') <div class="text-danger">{{ $message }}</div> @enderror
+                    </div>
+
                     <div class="mb-3 form-check">
                         <input type="checkbox" name="entro" class="form-check-input" value="1" {{ old('entro', $cheque->entro) ? 'checked' : '' }}>
                         <label class="form-check-label">¿Entró?</label>
                         @error('entro') <div class="text-danger">{{ $message }}</div> @enderror
                     </div>
+
                     <div class="d-flex justify-content-between">
                         <button type="submit" class="btn btn-success btn-lg">
                             <i class="bi bi-save"></i> Actualizar
