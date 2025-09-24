@@ -90,7 +90,8 @@ class ChequeController extends Controller
             ])->with('success', 'Cheque guardado. Ahora podés cargar otro.');
         }
 
-        return redirect()->route('cheques.index')->with('success', 'Cheque creado correctamente.');
+        $redirectUrl = $request->input('previous_url', route('cheques.index'));
+        return redirect($redirectUrl)->with('success', 'Cheque creado correctamente.');
     }
 
     public function edit(Cheque $cheque)
@@ -117,12 +118,13 @@ class ChequeController extends Controller
 
         $cheque->update($validated);
 
-        return redirect()->route('cheques.index')->with('success', 'Cheque actualizado correctamente.');
+        $redirectUrl = $request->input('previous_url', route('cheques.index'));
+        return redirect($redirectUrl)->with('success', 'Cheque actualizado correctamente.');
     }
 
     public function destroy(Cheque $cheque)
     {
         $cheque->delete();
-        return redirect()->route('facturas.index')->with('success', 'Cheque eliminado correctamente.');
+        return redirect()->back()->with('success', 'Cheque eliminado correctamente.');
     }
 }

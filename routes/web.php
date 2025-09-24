@@ -18,7 +18,7 @@ Route::post('login', [AuthController::class, 'login'])->name('login.attempt');
 Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 
 // Rutas protegidas por autenticación
-//Route::middleware('auth')->group(function () {
+Route::middleware('auth')->group(function () {
 
     // Dashboard principal
     Route::get('dashboard', function () {
@@ -60,4 +60,4 @@ Route::post('logout', [AuthController::class, 'logout'])->name('logout');
     // Proyecciones
     Route::get('proyecciones', [ProyeccionesController::class, 'index'])->name('proyecciones.index');
     Route::get('proyecciones/exportar-pdf', [ProyeccionesController::class, 'exportarPDF'])->name('proyecciones.exportarPDF');
-//});
+});

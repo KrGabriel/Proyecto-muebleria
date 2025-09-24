@@ -56,6 +56,8 @@ $(document).ready(function() {
                     @csrf
                     @method('PUT')
                     
+                    <input type="hidden" name="previous_url" value="{{ old('previous_url', url()->previous()) }}">
+
                     <div class="mb-3">
                         <label class="form-label">Cuenta Bancaria:</label>
                         <select name="codigo_cuenta" class="form-select" required>
@@ -120,7 +122,7 @@ $(document).ready(function() {
                         <button type="submit" class="btn btn-success btn-lg">
                             <i class="bi bi-save"></i> Actualizar
                         </button>
-                        <a href="{{ route('cheques.index') }}" class="btn btn-secondary btn-lg">
+                        <a href="{{ url()->previous() }}" class="btn btn-secondary btn-lg">
                             <i class="bi bi-arrow-left"></i> Volver
                         </a>
                     </div>

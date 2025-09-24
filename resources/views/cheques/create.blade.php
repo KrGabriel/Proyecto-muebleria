@@ -39,48 +39,48 @@ $(document).ready(function() {
             $('#lista_facturas').hide();
         }
     });
-});
 
-$('#numero_factura').on('keyup', function() {
-    let query = $(this).val();
-    if (query.length >= 2) {
-        $.ajax({
-            url: '/buscar-factura',
-            data: { q: query },
-            success: function(data) {
-                let lista = $('#lista_facturas').empty();
-                if (data.length === 0) {
-                    lista.append('<div class="list-group-item disabled">No se encontraron facturas</div>');
-                } else {
-                    data.forEach(function(factura) {
-                        let text = factura.numero + ' - ' + (factura.proveedor_nombre ?? 'Sin proveedor');
-                        lista.append(`<button type="button" class="list-group-item list-group-item-action" data-codigo="${factura.id}" data-numero="${factura.numero}" data-proveedor="${factura.proveedor_nombre}">${text}</button>`);
-                    });
+    $('#numero').on('keyup', function() {
+        let query = $(this).val();
+        if (query.length >= 2) {
+            $.ajax({
+                url: '/buscar-factura',
+                data: { q: query },
+                success: function(data) {
+                    let lista = $('#lista_facturas').empty();
+                    if (data.length === 0) {
+                        lista.append('<div class="list-group-item disabled">No se encontraron facturas</div>');
+                    } else {
+                        data.forEach(function(factura) {
+                            let text = factura.numero + ' - ' + (factura.nombre_proveedor ?? 'Sin proveedor');
+                            lista.append(`<button type="button" class="list-group-item list-group-item-action" data-codigo="${factura.id}" data-texto="${text}">${text}</button>`);
+                        });
+                    }
+                    lista.show();
                 }
-                lista.show();
-            }
-        });
-    } else {
-        $('#lista_facturas').hide();
-    }
-});
+            });
+        } else {
+            $('#lista_facturas').hide();
+        }
+    });
 
-$('#lista_facturas').on('click', 'button', function() {
-    let numero = $(this).data('numero');
-    let codigo = $(this).data('codigo');
-    let proveedor = $(this).data('proveedor');
-    $('#numero_factura').val(numero + (proveedor ? ' - ' + proveedor : ''));
-    $('#codigo_factura').val(codigo);
-    $('#lista_facturas').hide();
-});
-
-$(document).on('click', function(e) {
-    if (!$(e.target).closest('#numero_factura, #lista_facturas').length) {
+    $('#lista_facturas').on('click', 'button', function() {
+        let texto = $(this).data('texto');
+        let codigo = $(this).data('codigo');
+        $('#numero').val(texto);
+        $('#codigo_factura').val(codigo);
         $('#lista_facturas').hide();
-    }
+    });
+
+    $(document).on('click', function(e) {
+        if (!$(e.target).closest('#numero_factura, #lista_facturas').length) {
+            $('#lista_facturas').hide();
+        }
+    });
 });
 </script>
 @endpush
+
 @section('content')
 <div class="row justify-content-center">
     <div class="col-md-8">
@@ -91,7 +91,9 @@ $(document).on('click', function(e) {
             <div class="card-body">
                 <form action="{{ route('cheques.store') }}" method="POST">
                     @csrf
-                    {{-- ... otros campos del formulario ... --}}
+                    
+                    <input type="hidden" name="previous_url" value="{{ old('previous_url', url()->previous()) }}">
+
                     <div class="mb-3">
                         <label class="form-label">Cuenta Bancaria:</label>
                         <select name="codigo_cuenta" class="form-select" required>
@@ -154,7 +156,8 @@ $(document).on('click', function(e) {
                         <button type="submit" name="continuar" value="1" class="btn btn-primary btn-lg">
                             <i class="bi bi-plus-circle"></i> Guardar y crear otro
                         </button>
-                        <a href="{{ route('cheques.index') }}" class="btn btn-secondary btn-lg">
+
+                        <a href="{{ url()->previous() }}" class="btn btn-secondary btn-lg">
                             <i class="bi bi-arrow-left"></i> Volver
                         </a>
                     </div>

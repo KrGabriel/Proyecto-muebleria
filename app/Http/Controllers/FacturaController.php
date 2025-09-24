@@ -83,10 +83,8 @@ class FacturaController extends Controller
             $proveedor->save();
         }
 
-        return redirect()->route('facturas.index', [
-            'proveedor' => $factura->codigo_proveedor,
-            'factura_id' => $factura->id
-        ])->with('success', 'Factura creada. Ahora agregue los cheques.');
+        return redirect()->route('facturas.index')
+            ->with('success', 'Factura creada correctamente.');
     }
 
     public function edit($id)
