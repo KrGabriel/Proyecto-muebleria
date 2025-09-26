@@ -14,10 +14,12 @@ class CuentaBancariaController extends Controller
         return view('cuentas.index', compact('cuentas'));
     }
 
-    public function create()
+    public function create(Request $request)
     {
         $bancos = Banco::all();
-        return view('cuentas.create', compact('bancos'));
+        $bancoSeleccionado = $request->get('banco');
+        
+        return view('cuentas.create', compact('bancos', 'bancoSeleccionado'));
     }
 
     public function store(Request $request)
@@ -33,7 +35,9 @@ class CuentaBancariaController extends Controller
     public function edit(CuentaBancaria $cuenta)
     {
         $bancos = Banco::all();
-        return view('cuentas.edit', compact('cuenta', 'bancos'));
+        $bancoSeleccionado = $cuenta->numero_banco;
+        
+        return view('cuentas.edit', compact('cuenta', 'bancos', 'bancoSeleccionado'));
     }
 
     public function update(Request $request, CuentaBancaria $cuenta)
