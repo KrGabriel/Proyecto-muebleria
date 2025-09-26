@@ -55,7 +55,14 @@ class ChequeController extends Controller
         $facturaSeleccionadaId = null;
         $proveedorSeleccionado = null;
 
-        if ($numeroFactura) {
+        if ($request->has('factura')) {
+            $facturaId = $request->input('factura');
+            $factura = Factura::find($facturaId);
+            if ($factura) {
+                $facturaSeleccionadaId = $factura->id;
+                $proveedorSeleccionado = $factura->codigo_proveedor;
+            }
+        } elseif ($numeroFactura) {
             $factura = Factura::where('numero', $numeroFactura)->first();
             if ($factura) {
                 $facturaSeleccionadaId = $factura->id;
@@ -76,7 +83,6 @@ class ChequeController extends Controller
             'facturaSeleccionadaId'
         ));
     }
-
     
     public function store(Request $request)
     {
@@ -94,12 +100,16 @@ class ChequeController extends Controller
         $validated['entro'] = $request->has('entro');
 
         if ($validated['entro'] && empty($validated['fecha_entrada'])) {
-        $validated['fecha_entrada'] = now()->toDateString();
-       }
+            $validated['fecha_entrada'] = now()->toDateString();
+        }
 
         $cheque = Cheque::create($validated);
 
         if ($request->input('continuar') == '1') {
+            if (!session()->has('cheque_return_url')) {
+                session(['cheque_return_url' => $request->input('previous_url', route('facturas.index'))]);
+            }
+            
             return redirect()->route('cheques.create', [
                 'proveedor' => optional($cheque->factura)->codigo_proveedor,
                 'cuenta' => $cheque->codigo_cuenta,
@@ -107,8 +117,11 @@ class ChequeController extends Controller
             ])->with('success', 'Cheque guardado. Ahora podés cargar otro.');
         }
 
-        return redirect()->route('facturas.index')
-        ->with('success', 'Cheque creado correctamente.');
+        $returnUrl = session('cheque_return_url', route('facturas.index'));
+        session()->forget('cheque_return_url');
+        
+        return redirect($returnUrl)
+            ->with('success', 'Cheque creado correctamente.');
     }
 
     public function edit(Cheque $cheque)
@@ -132,6 +145,18 @@ class ChequeController extends Controller
         ]);
         
         $validated['entro'] = $request->has('entro');
+        
+        if ($validated['entro'] && !$cheque->entro) {
+            $validated['fecha_entrada'] = now()->toDateString();
+        }
+
+        elseif (!$validated['entro'] && $cheque->entro) {
+            $validated['fecha_entrada'] = null;
+        }
+
+        else {
+            $validated['fecha_entrada'] = $cheque->fecha_entrada;
+        }
 
         $cheque->update($validated);
 

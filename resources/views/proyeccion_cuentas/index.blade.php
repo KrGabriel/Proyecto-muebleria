@@ -106,6 +106,7 @@
             <thead class="table-dark">
                 <tr>
                     <th scope="col">¿Entro?</th>
+                    <th scope="col">Fecha Entrada</th> {{-- NUEVA COLUMNA --}}
                     <th scope="col">Fecha</th>
                     <th scope="col">Concepto</th>
                     <th scope="col" class="text-end">Débito</th>
@@ -116,15 +117,20 @@
                 @forelse ($proyecciones as $cheque)
                     <tr>
                         <td>{{ $cheque->entro ? "Sí" : "No" }}</td>
+                        <td>
+                            @if($cheque->fecha_entrada)
+                                {{ \Carbon\Carbon::parse($cheque->fecha_entrada)->format('d/m/Y') }}
+                            @else
+                                <span class="text-muted">-</span>
+                            @endif
+                        </td>
                         <td>{{ $cheque->fecha->format('d/m/Y') }}</td>
                         
-                        <!-- CAMBIO AQUÍ: Se añade el NÚMERO y nombre del proveedor al concepto -->
                         <td>
                             Cheque * {{ $cheque->numero_cheque }}
                             <br>
                             <small class="text-muted">
                                 @php
-                                    // Asignamos el proveedor a una variable para que el código sea más limpio y legible
                                     $proveedor = optional($cheque->factura)->proveedor;
                                 @endphp
                                 @if ($proveedor)
@@ -139,18 +145,18 @@
                         <td class="text-end">${{ number_format($cheque->haber, 2, ',', '.') }}</td>
                     </tr>
                 @empty
-                    <tr><td colspan="5" class="text-center text-muted">No hay proyecciones que coincidan con los filtros.</td></tr>
+                    <tr><td colspan="6" class="text-center text-muted">No hay proyecciones que coincidan con los filtros.</td></tr>
                 @endforelse
             </tbody>
             
             <tfoot class="table-group-divider fw-bold">
                 <tr>
-                    <td colspan="3" class="text-end">TOTALES:</td>
+                    <td colspan="4" class="text-end">TOTALES:</td> {{-- Actualizar colspan --}}
                     <td class="text-end">${{ number_format($totalDebe, 2, ',', '.') }}</td>
                     <td class="text-end">${{ number_format($totalHaber, 2, ',', '.') }}</td>
                 </tr>
                 <tr class="table-light">
-                    <td colspan="3" class="text-end">NETO TOTAL (Débito - Haber):</td>
+                    <td colspan="4" class="text-end">NETO TOTAL (Débito - Haber):</td> {{-- Actualizar colspan --}}
                     <td colspan="2" class="text-center fs-5">${{ number_format($totalNeto, 2, ',', '.') }}</td>
                 </tr>
             </tfoot>
@@ -159,9 +165,59 @@
     </div>
 
     @if ($proyecciones->hasPages())
-    <nav>
-        <ul class="pagination justify-content-center mt-4">
-            {{ $proyecciones->links() }}
+    <nav aria-label="Paginación de proyecciones">
+        <ul class="pagination pagination-sm justify-content-center mt-4">
+            {{-- Botón Anterior --}}
+            @if ($proyecciones->onFirstPage())
+                <li class="page-item disabled">
+                    <span class="page-link">&lsaquo;</span>
+                </li>
+            @else
+                <li class="page-item">
+                    <a class="page-link" href="{{ $proyecciones->previousPageUrl() }}" rel="prev">&lsaquo;</a>
+                </li>
+            @endif
+
+            {{-- Links de páginas --}}
+            @php
+                $start = max(1, $proyecciones->currentPage() - 2);
+                $end = min($proyecciones->lastPage(), $proyecciones->currentPage() + 2);
+            @endphp
+
+            @if($start > 1)
+                <li class="page-item">
+                    <a class="page-link" href="{{ $proyecciones->url(1) }}">1</a>
+                </li>
+                @if($start > 2)
+                    <li class="page-item disabled"><span class="page-link">...</span></li>
+                @endif
+            @endif
+
+            @for ($i = $start; $i <= $end; $i++)
+                <li class="page-item {{ $i == $proyecciones->currentPage() ? 'active' : '' }}">
+                    <a class="page-link" href="{{ $proyecciones->url($i) }}">{{ $i }}</a>
+                </li>
+            @endfor
+
+            @if($end < $proyecciones->lastPage())
+                @if($end < $proyecciones->lastPage() - 1)
+                    <li class="page-item disabled"><span class="page-link">...</span></li>
+                @endif
+                <li class="page-item">
+                    <a class="page-link" href="{{ $proyecciones->url($proyecciones->lastPage()) }}">{{ $proyecciones->lastPage() }}</a>
+                </li>
+            @endif
+
+            {{-- Botón Siguiente --}}
+            @if ($proyecciones->hasMorePages())
+                <li class="page-item">
+                    <a class="page-link" href="{{ $proyecciones->nextPageUrl() }}" rel="next">&rsaquo;</a>
+                </li>
+            @else
+                <li class="page-item disabled">
+                    <span class="page-link">&rsaquo;</span>
+                </li>
+            @endif
         </ul>
     </nav>
     @endif

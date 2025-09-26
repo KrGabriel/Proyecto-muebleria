@@ -92,7 +92,14 @@ $(document).ready(function() {
                 <form action="{{ route('cheques.store') }}" method="POST">
                     @csrf
                     
-                    <input type="hidden" name="previous_url" value="{{ old('previous_url', url()->previous()) }}">
+                    @php
+                        $previousUrl = old('previous_url', session('cheque_return_url', url()->previous()));
+                        // Si es la misma página (cheques.create), usar facturas.index
+                        if (str_contains($previousUrl, 'cheques/create')) {
+                            $previousUrl = route('facturas.index');
+                        }
+                    @endphp
+                    <input type="hidden" name="previous_url" value="{{ $previousUrl }}">
 
                     <div class="mb-3">
                         <label class="form-label">Cuenta Bancaria:</label>
@@ -151,7 +158,7 @@ $(document).ready(function() {
                             <i class="bi bi-plus-circle"></i> Guardar y crear otro
                         </button>
 
-                        <a href="{{ url()->previous() }}" class="btn btn-secondary btn-lg">
+                        <a href="{{ $previousUrl }}" class="btn btn-secondary btn-lg">
                             <i class="bi bi-arrow-left"></i> Volver
                         </a>
                     </div>
