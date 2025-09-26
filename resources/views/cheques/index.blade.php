@@ -48,7 +48,6 @@
                         <th>Haber</th>
                         <!-- CAMBIO 1: Se renombró "Fecha" y se añadió "Fecha Entrada" -->
                         <th>Fecha Emisión</th>
-                        <th>Fecha Entrada</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -71,14 +70,7 @@
                             <!-- CAMBIO 2: Se formateó la fecha para quitar la hora -->
                             <td>{{ $cheque->fecha->format('d/m/Y') }}</td>
                             
-                            <!-- CAMBIO 3: Se añadió la fecha de entrada, con manejo de nulos -->
-                            <td>
-                                @if($cheque->fecha_entrada)
-                                    {{ $cheque->fecha_entrada->format('d/m/Y') }}
-                                @else
-                                    <span class="text-muted">-</span>
-                                @endif
-                            </td>
+
 
                             <td>
                                 <a href="{{ route('cheques.edit', $cheque->id) }}" class="btn btn-warning btn-sm" title="Editar">

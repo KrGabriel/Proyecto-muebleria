@@ -106,12 +106,6 @@ $(document).ready(function() {
                         @error('fecha') <div class="text-danger">{{ $message }}</div> @enderror
                     </div>
 
-                    <div class="mb-3">
-                        <label class="form-label">Fecha de Entrada (Opcional):</label>
-                        <input type="date" name="fecha_entrada" class="form-control" value="{{ old('fecha_entrada', optional($cheque->fecha_entrada)->format('Y-m-d')) }}">
-                        @error('fecha_entrada') <div class="text-danger">{{ $message }}</div> @enderror
-                    </div>
-
                     <div class="mb-3 form-check">
                         <input type="checkbox" name="entro" class="form-check-input" value="1" {{ old('entro', $cheque->entro) ? 'checked' : '' }}>
                         <label class="form-check-label">¿Entró?</label>

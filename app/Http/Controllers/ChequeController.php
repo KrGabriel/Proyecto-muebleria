@@ -51,8 +51,21 @@ class ChequeController extends Controller
         $cuentas = CuentaBancaria::all();
         $facturas = Factura::with('proveedor')->get();
 
-        $proveedorSeleccionado = $request->input('proveedor');
-        $facturaSeleccionadaId = $request->input('factura_id');
+        $numeroFactura = $request->input('numero_factura');
+        $facturaSeleccionadaId = null;
+        $proveedorSeleccionado = null;
+
+        if ($numeroFactura) {
+            $factura = Factura::where('numero', $numeroFactura)->first();
+            if ($factura) {
+                $facturaSeleccionadaId = $factura->id;
+                $proveedorSeleccionado = $factura->codigo_proveedor;
+            }
+        } else {
+            $proveedorSeleccionado = $request->input('proveedor');
+            $facturaSeleccionadaId = $request->input('factura_id');
+        }
+
         $cuentaSeleccionada = $request->input('cuenta');
 
         return view('cheques.create', compact(
@@ -80,6 +93,10 @@ class ChequeController extends Controller
 
         $validated['entro'] = $request->has('entro');
 
+        if ($validated['entro'] && empty($validated['fecha_entrada'])) {
+        $validated['fecha_entrada'] = now()->toDateString();
+       }
+
         $cheque = Cheque::create($validated);
 
         if ($request->input('continuar') == '1') {
@@ -90,8 +107,8 @@ class ChequeController extends Controller
             ])->with('success', 'Cheque guardado. Ahora podés cargar otro.');
         }
 
-        $redirectUrl = $request->input('previous_url', route('cheques.index'));
-        return redirect($redirectUrl)->with('success', 'Cheque creado correctamente.');
+        return redirect()->route('facturas.index')
+        ->with('success', 'Cheque creado correctamente.');
     }
 
     public function edit(Cheque $cheque)
